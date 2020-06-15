@@ -1,0 +1,8 @@
+<mat-nav-list>
+    <a mat-list-item [routerLink]="['orders/ready-build']" [routerLinkActive]="['active']"> Готов к сборке </a>
+    <a mat-list-item [routerLink]="['orders/uncompleted']" [routerLinkActive]="['active']"> Некомплект </a>
+    <a mat-list-item [routerLink]="['orders/ready-shipment']" [routerLinkActive]="['active']"> Готов к отгрузке </a>
+    <!-- <a mat-list-item [routerLink]="['']"> Отправлен </a> -->
+    <a mat-list-item [routerLink]="['orders/canceled']" [routerLinkActive]="['active']"> Отменен </a>
+    <a mat-list-item [routerLink]="['orders/archive']" [routerLinkActive]="['active']"> Архив </a>
+</mat-nav-list>

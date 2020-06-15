@@ -1,0 +1,33 @@
+<div class="gr-search">
+    <mat-form-field appearance="outline">
+        <mat-label>Номер заказа</mat-label>
+        <input type="number" matInput placeholder="Введите номер заказа" (input)="onInputSearchData($event.target.value)" #numOrder min="0">
+        <mat-icon id="close" matSuffix *ngIf="numOrder.value.length > 0" (click)="onClearNumOrder(); numOrder.value = ''">close</mat-icon>
+    </mat-form-field>
+
+    <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value" (click)="onSearchOrder()"> 
+        <mat-icon>search</mat-icon> 
+    </button>
+
+    <!-- <button class="bt-search" mat-stroked-button (click)="onDropSearching(); numOrder.value = ''" *ngIf="searchNumOrder"> 
+        <mat-icon>clear</mat-icon> 
+    </button> -->
+</div>
+
+<mat-tab-group [(selectedIndex)]="tabIndex" (selectedTabChange)="selectedTab($event)" >
+    <mat-tab label="Все">
+        <app-ord-list [data]="'%'"></app-ord-list>
+    </mat-tab>
+    <mat-tab label="Брест"> 
+        <app-ord-list *ngIf="tabIndex === 1" [data]="'11'"></app-ord-list>
+    </mat-tab>
+    <mat-tab label="Долгиновский"> 
+        <app-ord-list *ngIf="tabIndex === 2" [data]="'8'"></app-ord-list>
+    </mat-tab>
+    <mat-tab label="Каменогорская"> 
+        <app-ord-list *ngIf="tabIndex === 3" [data]="'22'"></app-ord-list>
+    </mat-tab>
+    <mat-tab label="Молодечно"> 
+        <app-ord-list *ngIf="tabIndex === 4" [data]="'25'"></app-ord-list>
+    </mat-tab>
+</mat-tab-group>

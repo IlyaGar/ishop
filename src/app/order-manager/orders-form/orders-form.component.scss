@@ -1,0 +1,19 @@
+.mat-icon#close:hover {
+    cursor: pointer;
+    color: purple;
+}
+.gr-search {
+    margin: 0.5em;
+}
+.gr-search > button {
+    margin-left: 0.5em;
+}
+mat-form-field {
+    width: 15em;
+}
+.bt-search {
+    position: relative;
+    top: -5px;
+
+    height: 3.65em;
+}

@@ -1,0 +1,34 @@
+<!-- Default form login -->
+<div class="login-content">
+    <div class="text-center border border-light p-5">
+
+        <p class="h4 mb-4">Sign in</p>
+
+        <input type="text" class="form-control mb-4" placeholder="Login" [(ngModel)]="loginQuery.login" (keyup.enter)="onClickLogin()">
+
+        <input type="password" class="form-control mb-4" placeholder="Password" [(ngModel)]="loginQuery.password" (keyup.enter)="onClickLogin()">
+
+        <div class="d-flex justify-content-around">
+            <div>
+                <!-- Remember me -->
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                    <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+                </div>
+            </div>
+            <div>
+                <!-- Forgot password -->
+                <a href="">Forgot password?</a>
+            </div>
+        </div>
+
+        <!-- Sign in button -->
+        <button class="btn btn-info btn-block my-4" (click)="onClickLogin()">Sign in</button>
+
+        <!-- Register -->
+        <p>Not a member?
+            <a href="">Register</a>
+        </p>
+
+    </div>
+</div>

@@ -1,0 +1,142 @@
+<h2 class="name">{{client.fIO}}</h2>
+<ng-container *ngIf="client.adress === ' , , ,'"> <h3> Адрес: - </h3></ng-container> 
+<ng-container *ngIf="client.adress !== ' , , ,'"> <h3> Адрес: {{client.adress}} </h3></ng-container> 
+Заказ №{{orderBodyAnsw.num}} - 
+<text [ngSwitch]="orderBodyAnsw.name">
+    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
+    <ng-template ngSwitchCase="11"> Брест</ng-template>
+    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
+    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
+</text>
+<br>
+Подзаказ №{{orderBodyAnsw.sub_num}}
+<br>
+<div class="bt-group">
+<!-- (click)="onDecision(requestTask)" -->
+    <!-- <button mat-stroked-button> Печать заказа </button> -->
+    <button mat-stroked-button
+        [printStyle]="{ th: {'border': '1px solid black'}, td: {'border': '1px solid black'}, table: {'border-collapse': 'collapse', 'width': '100%'}}"
+        printSectionId="print-order-section"  
+        ngxPrint> 
+        <mat-icon>print</mat-icon> 
+    </button>
+    <button mat-stroked-button
+        [printStyle]="{ th: {'border': '1px solid black'}, td: {'border': '1px solid black'}, table: {'border-collapse': 'collapse', 'width': '100%'}}"
+        printSectionId="print-barcode-section"  
+        ngxPrint>
+        <img src="../../assets/barcode-icon.png" width="28" /> 
+    </button>
+</div>
+
+    
+<div class="table-container mat-elevation-z8 table-hover">
+    <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="article">
+            <th mat-header-cell *matHeaderCellDef> Артикул </th>
+            <td mat-cell *matCellDef="let element"> 
+                {{element.article}}
+                <ng-container *ngIf="element.foto">
+                    <img [src]="element.foto" width="100" />
+                </ng-container>
+                <ng-container *ngIf="!element.foto">
+                    <img src="../../assets/no_photo.png" width="100" />
+                </ng-container> 
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Наименование </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} 
+                <!-- <br>
+                <small id="store">склад</small> -->
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="barcode">
+            <th mat-header-cell *matHeaderCellDef> Штрихкод </th>
+            <td mat-cell *matCellDef="let element"> 
+                {{element.barcode}} 
+                <!-- <mat-list>
+                    <a mat-list-item *ngFor="let barcode of element.barcode"> {{ barcode }}, </a>
+                </mat-list> -->
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="count">
+            <th mat-header-cell *matHeaderCellDef> Требуемое количество </th>
+            <td mat-cell *matCellDef="let element"> {{element.count_e}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="countReady">
+            <th mat-header-cell *matHeaderCellDef> Собраное количество </th>
+            <td mat-cell *matCellDef="let element; let i = index"> 
+                <mat-form-field appearance="outline">
+                    <mat-label *ngIf="element.changed">{{element.count_g}}</mat-label>
+                    <input type="number" autocomplete="off" matInput placeholder="Количество" (input)="onInputNewCount($event.target.value, element)" #countChage min="0">
+                    <mat-icon id="close" matSuffix *ngIf="countChage.value.length > 0" (click)="onClearCount(element); countChage.value = ''">close</mat-icon>
+                </mat-form-field>
+            </td>
+        </ng-container>
+    
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></tr>
+    </table>
+    <button id="save" mat-stroked-button (click)="onSaveChanges()" [disabled]="!isDataChanged"> Сохранить изменения </button>
+</div>
+
+<div id="print-order-section" hidden>
+    <!-- <app-order-print-form [data]="orderBodyAnsw"></app-order-print-form>   -->
+    <h2 class="name">{{client.fIO}}</h2>
+    <ng-container *ngIf="client.adress === ' , , ,'"> <h3> Адрес: - </h3></ng-container> 
+    <ng-container *ngIf="client.adress !== ' , , ,'"> <h3> Адрес: {{client.adress}} </h3></ng-container> 
+    Заказ №{{orderBodyAnsw.num}} - 
+    <text [ngSwitch]="orderBodyAnsw.name">
+        <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
+        <ng-template ngSwitchCase="11"> Брест</ng-template>
+        <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
+        <ng-template ngSwitchCase="25"> Молодечно </ng-template>
+    </text>
+    <br>
+    Подзаказ №{{orderBodyAnsw.sub_num}}
+    <br>
+
+    <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="article">
+            <th mat-header-cell *matHeaderCellDef> Артикул </th>
+            <td mat-cell *matCellDef="let element"> {{element.article}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Наименование </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="barcode">
+            <th mat-header-cell *matHeaderCellDef> Штрихкод </th>
+            <td mat-cell *matCellDef="let element"> {{element.barcode}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="count">
+            <th mat-header-cell *matHeaderCellDef> Количество </th>
+            <td mat-cell *matCellDef="let element"> {{element.count_e}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="countReady">
+            <th mat-header-cell *matHeaderCellDef> Собранно </th>
+            <td mat-cell *matCellDef="let element"> {{element.count_g}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cost">
+            <th mat-header-cell *matHeaderCellDef> Цена </th>
+            <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsPrint; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsPrint; let i = index"></tr>
+    </table>
+</div>
+<!-- <div id="print-barcode-section" hidden>
+    barcode
+</div> -->

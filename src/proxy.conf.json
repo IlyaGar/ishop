@@ -1,0 +1,7 @@
+{
+    "/https/*": {
+        "target": "https://mile.by/gtools/getImg/index.php",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

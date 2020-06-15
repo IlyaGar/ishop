@@ -1,0 +1,11 @@
+<mat-drawer-container class="drawer-container" autosize>
+    
+    <mat-drawer #drawer class="drawer-sidenav" mode="side">
+        <app-vertical-menu *ngIf="!isPathActiv('/login')"></app-vertical-menu>
+    </mat-drawer>
+  
+    <div class="sidenav-content">
+        <router-outlet></router-outlet>   
+    </div>
+  
+</mat-drawer-container>

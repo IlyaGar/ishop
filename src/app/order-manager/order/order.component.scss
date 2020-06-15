@@ -1,0 +1,37 @@
+.table-container {
+    // height: 400px;
+    overflow: auto;
+}
+table {
+    width: 100%;
+}
+.mat-list-item {
+    height: 1.2em !important;
+    font-size: 14px;
+}
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.mat-icon#close:hover {
+    cursor: pointer;
+    color: purple;
+}
+mat-form-field {
+    width: 10em;
+}
+.bt-group {
+    margin: 0.5em;
+}
+.bt-group button:first-child {
+    margin-right: 0.5em;
+}
+button#save {
+    margin: 0.5em;
+    float: right; 
+}
+#store {
+    color: rgb(194, 216, 245);
+}
