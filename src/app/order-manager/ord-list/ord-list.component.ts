@@ -44,6 +44,7 @@ export class OrdListComponent implements OnInit {
   displayedColumns = ['status', 'name', 'client', 'collector', 'place', 'note', 'action'];
   countRecord = 0;
   scrollHeight = 1350;
+  splitElement = ';';
 
   messageNoConnect = 'Нет соединения, попробуйте позже.';
   action = 'Ok';

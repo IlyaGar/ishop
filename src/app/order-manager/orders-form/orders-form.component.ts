@@ -42,10 +42,12 @@ export class OrdersFormComponent implements OnInit {
 
   selectedTab($event) {
     this.tabIndex = $event.index;
+    this.timerValue = 120;
   }
 
   onInputSearchData($event) {
     this.searchNumOrder = $event;
+    this.timerValue = 120;
   }
 
   onClearNumOrder() {
@@ -55,5 +57,6 @@ export class OrdersFormComponent implements OnInit {
 
   onSearchOrder() {
     this.orderSearchService.searchEvent(this.searchNumOrder);
+    this.timerValue = 120;
   }
 }
