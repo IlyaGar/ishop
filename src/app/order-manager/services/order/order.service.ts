@@ -9,6 +9,8 @@ import { OrderBodyReq } from '../../models/order-body-req';
 import { OrderBodyAnsw } from '../../models/order-body-answ';
 import { ToCassa } from '../../models/to-cassa';
 import { PauseOrderReq } from '../../models/pause-order-req';
+import { BelPostReq } from '../../models/bel-post-req';
+import { BelPostAnsw } from '../../models/bel-post-answ';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,7 @@ export class OrderService {
   urlGetSuborder = this.urlOrder + '/suborder/';
   urlToCassa = this.urlOrder + '/cassa/';
   urlPause = this.urlOrder + '/pause/';
+  urlBelpost = this.urlOrder + '/belpost/';
 
   constructor(private http: HttpClient) { }
 
@@ -54,5 +57,9 @@ export class OrderService {
 
   orderReturnToAssembly(data): Observable<any> {
     return this.http.post<any>(`${this.urlOrder}`, data);
+  }
+
+  getBarcode(data: BelPostReq): Observable<BelPostAnsw> {
+    return this.http.post<BelPostAnsw>(`${this.urlBelpost}`, data);
   }
 }

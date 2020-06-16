@@ -1,0 +1,22 @@
+<div *ngFor="let barcode of data.barcodes">
+    <table style="border:1px black solid; width: 320; height: 213;">
+        <tr style="border: none">
+            <td style="border: none; padding: 0 10px; align-content: center; font-size: large; font-weight: 600;" align="center">ОАО "Астомстрой"</td>
+            <td style="border: none"></td>
+        </tr>
+        <tr style="border: none">
+            <td style="border: none; padding: 0 10px" align="center"><img [src]="imgSource + barcode" width="140" height="42"></td>
+            <td style="border: none; padding: 0 10px" align="center"> 
+                {{data.username}}
+                <br>
+                <br>
+                {{data.address}}
+             </td>
+        </tr>
+        <tr style="border: none">
+            <td style="border: none; padding: 0 10px; font-size: large; font-weight: 600;" align="center"> Заказ №{{data.num}}</td>
+            <td style="border: none"></td>
+        </tr>
+    </table>
+    <br>
+</div>

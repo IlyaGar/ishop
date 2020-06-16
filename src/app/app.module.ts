@@ -29,6 +29,9 @@ import { OrdersCanceledComponent } from './order-manager/orders-canceled/orders-
 import { OrdersArchiveComponent } from './order-manager/orders-archive/orders-archive.component';
 import { OrdersFormComponent } from './order-manager/orders-form/orders-form.component';
 import { OrdListComponent } from './order-manager/ord-list/ord-list.component';
+import { BarcodeInputCountFormComponent } from './order-manager/dialog-windows/barcode-input-count-form/barcode-input-count-form.component';
+import { BarcodePrintFormComponent } from './order-manager/components/barcode-print-form/barcode-print-form.component';
+import { SplitPipe } from './pipes/split.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { OrdListComponent } from './order-manager/ord-list/ord-list.component';
     OrdersArchiveComponent,
     OrdersFormComponent,
     OrdListComponent,
+    BarcodeInputCountFormComponent,
+    BarcodePrintFormComponent,
+    SplitPipe,
   ],
   imports: [
     AppRoutingModule,
@@ -67,6 +73,9 @@ import { OrdListComponent } from './order-manager/ord-list/ord-list.component';
     Title,
     HttpClient,
     CookieService,
+  ],
+  entryComponents: [
+    BarcodeInputCountFormComponent
   ],
   bootstrap: [AppComponent]
 })

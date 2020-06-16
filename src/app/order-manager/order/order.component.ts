@@ -9,6 +9,11 @@ import { element } from 'protractor';
 import { ClientInfo } from '../models/client-info';
 import { OrderBody } from '../models/order-body';
 import { Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { BelPostReq } from '../models/bel-post-req';
+import { BelPostAnsw } from '../models/bel-post-answ';
+import { BarcodeInputCountFormComponent } from '../dialog-windows/barcode-input-count-form/barcode-input-count-form.component';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-order',
@@ -17,7 +22,8 @@ import { Title } from '@angular/platform-browser';
 })
 export class OrderComponent implements OnInit {
 
-  imgSource = 'https://barcode.tec-it.com/barcode.ashx?data=';
+  @ViewChild('barcodePrint', { static: true }) barcodePrint: any;
+
   displayedColumns = ['article', 'name', 'barcode', 'count', 'countReady'];
   displayedColumnsPrint = ['article', 'name', 'barcode', 'count', 'countReady', 'cost'];
   dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, 0)];
@@ -27,8 +33,11 @@ export class OrderComponent implements OnInit {
 
   orderBodyAnsw: OrderBodyAnsw = new OrderBodyAnsw('', '', '', new ClientInfo('', '', ''), [new OrderBody('', '', '', '', 0, 0, 0, false, 0)]);
   countReadyСhange: number;
+  belPostAnsw: BelPostAnsw = null;
+  splitElement = ';';
 
   constructor(
+    public dialog: MatDialog,
     private router: Router,
     private titleService: Title,
     private route: ActivatedRoute,
@@ -58,7 +67,6 @@ export class OrderComponent implements OnInit {
     this.orderBodyAnsw = response;
     this.client = this.orderBodyAnsw.aboutClient;
     this.dataSource = this.orderBodyAnsw.body;
-    this.imgSource = this.imgSource + this.orderBodyAnsw.sub_num;
   }
 
   onInputNewCount(event: string, element: OrderBody) : void{
@@ -82,5 +90,32 @@ export class OrderComponent implements OnInit {
   checkDataChanged() : boolean {
     let result = this.dataSource.filter(d => d.changed === true);
     return result.length > 0
+  }
+
+  openStoragePrintBarcodeDialog() {
+    const dialogRef = this.dialog.open(BarcodeInputCountFormComponent, {
+      width: "300px",
+      data: {  },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result >= 1 && result <= 4) {
+        let belPostReq = new BelPostReq(this.tokenService.getToken(), this.orderBodyAnsw.sub_num, result) 
+        this.orderService.getBarcode(belPostReq).subscribe(response => {
+          if(response) {
+            this.belPostAnsw = response;
+            let t = timer(0, 100).subscribe(vl => { 
+              console.log(vl);
+              if(vl >= 10) {
+                this.barcodePrint._elementRef.nativeElement.click();
+                t.unsubscribe();
+              }
+            });
+          }
+        },
+        error => { 
+          console.log(error);
+        });
+      }
+    });
   }
 }

@@ -11,7 +11,7 @@ thumbClass="custom-scrollbars">
                     <div [ngSwitch]="element.status">
                         <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
                         <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                        <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
+                        <ng-template ngSwitchCase="в сборке"><div class="assembly"> в сборке </div></ng-template>
                         <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
                         <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
                         <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
@@ -22,7 +22,6 @@ thumbClass="custom-scrollbars">
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Заказ </th>
                 <td mat-cell *matCellDef="let element"> 
-                    <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
                     <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
                         <ng-container *ngIf="element.order.name"></ng-container>
                         <a [ngSwitch]="element.order.name">
@@ -35,7 +34,8 @@ thumbClass="custom-scrollbars">
                     <br>
                     <small class="datetime"> {{element.order.datetime}} </small>
                     <small> Тип доставки: </small>
-                    <small class="delivery-type"> {{element.order.delivery_type}} </small>
+                    <small class="delivery-type" *ngIf="element.order.delivery_type"> {{element.order.delivery_type}} </small>
+                    <small class="delivery-type" *ngIf="!element.order.delivery_type"> самовывоз </small>
                 </td>
             </ng-container>
 

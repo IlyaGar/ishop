@@ -13,6 +13,7 @@ import { ToCassa } from '../models/to-cassa';
 import { timer } from 'rxjs';
 import { PauseOrderReq } from '../models/pause-order-req';
 import { OrderSearchService } from 'src/app/common/services/order-search/order-search.service';
+import { TimerService } from 'src/app/common/services/timer/timer.service';
 
 @Component({
   selector: 'app-ord-list',
@@ -51,13 +52,22 @@ export class OrdListComponent implements OnInit {
   constructor(
     private router: Router,
     private location: Location,
+    private timerService: TimerService,
     private storeService: StoreService,
     private orderService: OrderService,
     private tokenService: TokenService,
     private snackbarService: SnackbarService,
     private orderSearchService: OrderSearchService,
   ) { 
-    this.orderSearchService.events$.forEach(value => { this.onSearchOrder(value) } );
+    this.orderSearchService.events$.forEach(value => { 
+      this.onSearchOrder(value) 
+    });
+    this.timerService.events$.forEach(value => { 
+      if(value === 'update') {
+        this.loadData();  
+        this.countRecord = 0; 
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -154,7 +164,7 @@ export class OrdListComponent implements OnInit {
     element.order.isCassaPause = true;
     let t = timer(0, 1000).subscribe(vl => { 
       console.log(vl);
-      if(vl >= 15) {
+      if(vl >= 20) {
         element.order.isCassaPause = false;
         t.unsubscribe();
       }

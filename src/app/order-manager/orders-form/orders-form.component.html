@@ -1,4 +1,4 @@
-<div class="gr-search">
+<div class="gr-search row">
     <mat-form-field appearance="outline">
         <mat-label>Номер заказа</mat-label>
         <input type="number" matInput placeholder="Введите номер заказа" (input)="onInputSearchData($event.target.value)" #numOrder min="0">
@@ -8,10 +8,7 @@
     <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value" (click)="onSearchOrder()"> 
         <mat-icon>search</mat-icon> 
     </button>
-
-    <!-- <button class="bt-search" mat-stroked-button (click)="onDropSearching(); numOrder.value = ''" *ngIf="searchNumOrder"> 
-        <mat-icon>clear</mat-icon> 
-    </button> -->
+    <span> Страница обновится через: {{timerValue}} </span>
 </div>
 
 <mat-tab-group [(selectedIndex)]="tabIndex" (selectedTabChange)="selectedTab($event)" >
