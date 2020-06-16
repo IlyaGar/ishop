@@ -1,5 +1,5 @@
 
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -64,6 +64,7 @@ import { OrdListComponent } from './order-manager/ord-list/ord-list.component';
   ],
   exports: [AngularMaterialModule],
   providers: [    
+    Title,
     HttpClient,
     CookieService,
   ],

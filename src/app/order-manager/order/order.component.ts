@@ -8,6 +8,7 @@ import { OrderBodyAnsw } from '../models/order-body-answ';
 import { element } from 'protractor';
 import { ClientInfo } from '../models/client-info';
 import { OrderBody } from '../models/order-body';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-order',
@@ -16,6 +17,7 @@ import { OrderBody } from '../models/order-body';
 })
 export class OrderComponent implements OnInit {
 
+  imgSource = 'https://barcode.tec-it.com/barcode.ashx?data=';
   displayedColumns = ['article', 'name', 'barcode', 'count', 'countReady'];
   displayedColumnsPrint = ['article', 'name', 'barcode', 'count', 'countReady', 'cost'];
   dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, 0)];
@@ -28,6 +30,7 @@ export class OrderComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private titleService: Title,
     private route: ActivatedRoute,
     private orderService: OrderService,
     private tokenService: TokenService,
@@ -36,6 +39,7 @@ export class OrderComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.titleService.setTitle(this.titleService.getTitle() + ' №' + this.orderId ); 
     let orderBodyReq = new OrderBodyReq(this.tokenService.getToken(), this.orderId)
     this.orderService.getSuborder(orderBodyReq).subscribe(response => {
       if(response) {
@@ -54,6 +58,7 @@ export class OrderComponent implements OnInit {
     this.orderBodyAnsw = response;
     this.client = this.orderBodyAnsw.aboutClient;
     this.dataSource = this.orderBodyAnsw.body;
+    this.imgSource = this.imgSource + this.orderBodyAnsw.sub_num;
   }
 
   onInputNewCount(event: string, element: OrderBody) : void{
