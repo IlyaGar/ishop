@@ -10,6 +10,7 @@ import { LoginResponse } from 'src/app/login-manager/models/login-response';
 export class TokenService {
 
   cookieName = environment.cookieName;
+  
   public _subject = new Subject<any>();
   
   constructor(

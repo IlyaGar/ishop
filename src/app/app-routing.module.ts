@@ -13,7 +13,7 @@ import { OrdersFormComponent } from './order-manager/orders-form/orders-form.com
 const routes: Routes = [
   { path: '', redirectTo: '/orders/ready-build', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
-  { path: 'order/:id', component: OrderComponent },
+  { path: 'order/:id', component: OrderComponent, data: { status : 'status' } },
   { path: 'orders/ready-build', component: OrdersReadyBuildComponent },
   { path: 'orders/uncompleted', component: OrdersUncompletedComponent },
   { path: 'orders/ready-shipment', component: OrdersReadyShipmentComponent },
