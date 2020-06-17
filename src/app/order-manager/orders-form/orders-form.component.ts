@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { OrderSearchService } from 'src/app/common/services/order-search/order-search.service';
-import { timer } from 'rxjs';
 import { TimerService } from 'src/app/common/services/timer/timer.service';
 import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-orders-form',
@@ -15,19 +15,19 @@ export class OrdersFormComponent implements OnInit {
   tabIndex: number;
   searchNumOrder: string = '';
   timerValue: any = 120;
-  id: any;
+  intervalId: any;
 
   constructor(
+    private titleService: Title,
     private timerService: TimerService,
     private snackbarService: SnackbarService,
     private orderSearchService: OrderSearchService,
   ) { }
 
   ngOnInit(): void {
-    let v = 0;
-    this.id = setInterval(() => {
+    this.titleService.setTitle('IShop Mile'); 
+    this.intervalId = setInterval(() => {
       this.timerValue = this.timerValue - 1;
-
       if(this.timerValue == 0) {
         this.snackbarService.openSnackBar('Список заказов был обнавлен', 'Ok');
         this.timerService.updateEvent('update');
@@ -37,7 +37,7 @@ export class OrdersFormComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    clearInterval(this.id);
+    clearInterval(this.intervalId);
   }
 
   selectedTab($event) {

@@ -8,6 +8,8 @@ export class OrderBody{
         public count_g: number,
         public count_gСhange: number,
         public changed: boolean,
-        public cost: number = 1,
+        public price: string,
+        public vatz: string,
+        public remote_stock: string,
     ){}
 }

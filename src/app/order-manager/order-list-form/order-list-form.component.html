@@ -1,531 +1,104 @@
-<div class="gr-search">
-    <mat-form-field appearance="outline">
-        <mat-label>Номер заказа</mat-label>
-        <input type="number" matInput placeholder="Введите номер заказа" (input)="onInputSearchData($event.target.value)" #numOrder min="0">
-        <mat-icon id="close" matSuffix *ngIf="numOrder.value.length > 0" (click)="onClearNumOrder(); numOrder.value = ''">close</mat-icon>
-    </mat-form-field>
+<ng-scrollbar 
+#scrollable 
+[visibility]="'hover'" 
+thumbClass="custom-scrollbars">   
+    <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="orderListAnsw" class="table-hover">
 
-    <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value" (click)="onSearchOrder()"> 
-        <mat-icon>search</mat-icon> 
-    </button>
-</div>
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef> Статус </th>
+                <td mat-cell *matCellDef="let element">
+                    <div [ngSwitch]="element.status">
+                        <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
+                        <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
+                        <ng-template ngSwitchCase="в сборке"><div class="assembly"> в сборке </div></ng-template>
+                        <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
+                        <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
+                        <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
+                    </div>
+                </td>
+            </ng-container>
 
-<!-- <mat-tab-group>
-    <mat-tab *ngFor="let shop of arrShop" label="{{shop}}">{{shop}}</mat-tabs>
-</mat-tab-group> -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Заказ </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
+                        <ng-container *ngIf="element.order.name"></ng-container>
+                        <a [ngSwitch]="element.order.name">
+                            <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
+                            <ng-template ngSwitchCase="11"> Брест</ng-template>
+                            <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
+                            <ng-template ngSwitchCase="25"> Молодечно </ng-template>
+                        </a>
+                    </a>
+                    <br>
+                    <small class="datetime"> {{element.order.datetime}} </small>
+                    <small> Тип доставки: </small>
+                    <small class="delivery-type" *ngIf="element.order.delivery_type"> {{element.order.delivery_type}} </small>
+                    <small class="delivery-type" *ngIf="!element.order.delivery_type"> самовывоз </small>
+                </td>
+            </ng-container>
 
-<!-- (click)="onTabClick($event)" -->
-<mat-tab-group [(selectedIndex)]="tabIndex" (selectedTabChange)="selectedTab($event)" >
-    <mat-tab label="Все">
-        <ng-scrollbar 
-        #scrollable 
-        [visibility]="'hover'" 
-        thumbClass="custom-scrollbars">   
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="orderListAnswAll" class="table-hover">
+            <ng-container matColumnDef="client">
+                <th mat-header-cell *matHeaderCellDef> Заказчик </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <div  class="fio">{{element.aboutClient.fIO}}</div>
+                    <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Статус </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div [ngSwitch]="element.status">
-                                <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
-                                <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                                <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
-                                <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
-                                <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
-                                <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
-                            </div>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="collector">
+                <th mat-header-cell *matHeaderCellDef> Сборщик </th>
+                <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Заказ </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
-                            <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
-                                <ng-container *ngIf="element.order.name"></ng-container>
-                                <a [ngSwitch]="element.order.name">
-                                    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
-                                    <ng-template ngSwitchCase="11"> Брест</ng-template>
-                                    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
-                                    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
-                                </a>
-                            </a>
-                            <br>
-                            <small class="datetime"> {{element.order.datetime}} </small>
-                            <small> Тип доставки: </small>
-                            <small class="delivery-type"> {{element.order.delivery_type}} </small>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="place">
+                <th mat-header-cell *matHeaderCellDef> Место </th>
+                <td mat-cell *matCellDef="let element"> {{element.place}} </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="client">
-                        <th mat-header-cell *matHeaderCellDef> Заказчик </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <div  class="fio">{{element.aboutClient.fIO}}</div>
-                            <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="note">
+                <th mat-header-cell *matHeaderCellDef> Примечание </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <mat-list>
+                        <a mat-list-item *ngFor="let barcode of element.info | split:splitElement"> {{ barcode }} </a>
+                    </mat-list>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="collector">
-                        <th mat-header-cell *matHeaderCellDef> Сборщик </th>
-                        <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="place">
-                        <th mat-header-cell *matHeaderCellDef> Место </th>
-                        <td mat-cell *matCellDef="let element"> {{element.place}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="note">
-                        <th mat-header-cell *matHeaderCellDef> Примечание </th>
-                        <td mat-cell *matCellDef="let element"> {{element.info}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Действие </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
-                                    <mat-icon>pause_circle_outline</mat-icon>
-                                    <span>Приостановить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    <span>Возобновить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
-                                    <mat-icon>pageview</mat-icon>
-                                    <span>Просмотр</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                                    <mat-icon>move_to_inbox</mat-icon>
-                                    <span>Запись в кассу</span>
-                                </button>
-                                <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
-                                    <mat-icon>keyboard_return</mat-icon>
-                                    <span>Вернуть в сборку</span>
-                                </button> -->
-                            </mat-menu>
-                        </td>
-                    </ng-container>    
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-        </ng-scrollbar>
-    </mat-tab>
-    <mat-tab label="Брест"> 
-        <ng-scrollbar 
-        #scrollable 
-        [visibility]="'hover'" 
-        thumbClass="custom-scrollbars">   
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="orderListAnswAll" class="table-hover">
-
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Статус </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div [ngSwitch]="element.status">
-                                <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
-                                <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                                <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
-                                <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
-                                <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
-                                <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Заказ </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
-                            <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
-                                <ng-container *ngIf="element.order.name"></ng-container>
-                                <a [ngSwitch]="element.order.name">
-                                    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
-                                    <ng-template ngSwitchCase="11"> Брест</ng-template>
-                                    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
-                                    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
-                                </a>
-                            </a>
-                            <br>
-                            <small class="datetime"> {{element.order.datetime}} </small>
-                            <small> Тип доставки: </small>
-                            <small class="delivery-type"> {{element.order.delivery_type}} </small>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="client">
-                        <th mat-header-cell *matHeaderCellDef> Заказчик </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <div  class="fio">{{element.aboutClient.fIO}}</div>
-                            <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="collector">
-                        <th mat-header-cell *matHeaderCellDef> Сборщик </th>
-                        <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="place">
-                        <th mat-header-cell *matHeaderCellDef> Место </th>
-                        <td mat-cell *matCellDef="let element"> {{element.place}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="note">
-                        <th mat-header-cell *matHeaderCellDef> Примечание </th>
-                        <td mat-cell *matCellDef="let element"> {{element.info}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Действие </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
-                                    <mat-icon>pause_circle_outline</mat-icon>
-                                    <span>Приостановить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    <span>Возобновить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
-                                    <mat-icon>pageview</mat-icon>
-                                    <span>Просмотр</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                                    <mat-icon>move_to_inbox</mat-icon>
-                                    <span>Запись в кассу</span>
-                                </button>
-                                <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
-                                    <mat-icon>keyboard_return</mat-icon>
-                                    <span>Вернуть в сборку</span>
-                                </button> -->
-                            </mat-menu>
-                        </td>
-                    </ng-container>    
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-        </ng-scrollbar>
-    </mat-tab>
-    <mat-tab label="Долгиновский"> 
-        <ng-scrollbar 
-        #scrollable 
-        [visibility]="'hover'" 
-        thumbClass="custom-scrollbars">   
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="orderListAnswAll" class="table-hover">
-
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Статус </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div [ngSwitch]="element.status">
-                                <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
-                                <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                                <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
-                                <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
-                                <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
-                                <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Заказ </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
-                            <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
-                                <ng-container *ngIf="element.order.name"></ng-container>
-                                <a [ngSwitch]="element.order.name">
-                                    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
-                                    <ng-template ngSwitchCase="11"> Брест</ng-template>
-                                    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
-                                    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
-                                </a>
-                            </a>
-                            <br>
-                            <small class="datetime"> {{element.order.datetime}} </small>
-                            <small> Тип доставки: </small>
-                            <small class="delivery-type"> {{element.order.delivery_type}} </small>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="client">
-                        <th mat-header-cell *matHeaderCellDef> Заказчик </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <div  class="fio">{{element.aboutClient.fIO}}</div>
-                            <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="collector">
-                        <th mat-header-cell *matHeaderCellDef> Сборщик </th>
-                        <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="place">
-                        <th mat-header-cell *matHeaderCellDef> Место </th>
-                        <td mat-cell *matCellDef="let element"> {{element.place}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="note">
-                        <th mat-header-cell *matHeaderCellDef> Примечание </th>
-                        <td mat-cell *matCellDef="let element"> {{element.info}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Действие </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
-                                    <mat-icon>pause_circle_outline</mat-icon>
-                                    <span>Приостановить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    <span>Возобновить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
-                                    <mat-icon>pageview</mat-icon>
-                                    <span>Просмотр</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                                    <mat-icon>move_to_inbox</mat-icon>
-                                    <span>Запись в кассу</span>
-                                </button>
-                                <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element)">
-                                    <mat-icon>keyboard_return</mat-icon>
-                                    <span>Вернуть в сборку</span>
-                                </button> -->
-                            </mat-menu>
-                        </td>
-                    </ng-container>    
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-        </ng-scrollbar>
-    </mat-tab>
-    <mat-tab label="Каменогорская"> 
-        <ng-scrollbar 
-        #scrollable 
-        [visibility]="'hover'" 
-        thumbClass="custom-scrollbars">   
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="orderListAnswAll" class="table-hover">
-
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Статус </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div [ngSwitch]="element.status">
-                                <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
-                                <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                                <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
-                                <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
-                                <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
-                                <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Заказ </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
-                            <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
-                                <ng-container *ngIf="element.order.name"></ng-container>
-                                <a [ngSwitch]="element.order.name">
-                                    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
-                                    <ng-template ngSwitchCase="11"> Брест</ng-template>
-                                    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
-                                    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
-                                </a>
-                            </a>
-                            <br>
-                            <small class="datetime"> {{element.order.datetime}} </small>
-                            <small> Тип доставки: </small>
-                            <small class="delivery-type"> {{element.order.delivery_type}} </small>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="client">
-                        <th mat-header-cell *matHeaderCellDef> Заказчик </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <div  class="fio">{{element.aboutClient.fIO}}</div>
-                            <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="collector">
-                        <th mat-header-cell *matHeaderCellDef> Сборщик </th>
-                        <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="place">
-                        <th mat-header-cell *matHeaderCellDef> Место </th>
-                        <td mat-cell *matCellDef="let element"> {{element.place}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="note">
-                        <th mat-header-cell *matHeaderCellDef> Примечание </th>
-                        <td mat-cell *matCellDef="let element"> {{element.info}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Действие </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
-                                    <mat-icon>pause_circle_outline</mat-icon>
-                                    <span>Приостановить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    <span>Возобновить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
-                                    <mat-icon>pageview</mat-icon>
-                                    <span>Просмотр</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                                    <mat-icon>move_to_inbox</mat-icon>
-                                    <span>Запись в кассу</span>
-                                </button>
-                                <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
-                                    <mat-icon>keyboard_return</mat-icon>
-                                    <span>Вернуть в сборку</span>
-                                </button> -->
-                            </mat-menu>
-                        </td>
-                    </ng-container>    
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-        </ng-scrollbar>
-    </mat-tab>
-    <mat-tab label="Молодечно" (scroll)="onScroll($event)"> 
-        <ng-scrollbar 
-        #scrollable 
-        [visibility]="'hover'" 
-        thumbClass="custom-scrollbars" (scroll)="onScroll($event)">   
-            <div class="table-container mat-elevation-z8" (scroll)="onScroll($event)">
-                <table mat-table [dataSource]="orderListAnswAll" class="table-hover" (scroll)="onScroll($event)">
-
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Статус </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div [ngSwitch]="element.status">
-                                <ng-template ngSwitchCase="не принят"><div class="ready-collect"> готов к сборке </div></ng-template>
-                                <ng-template ngSwitchCase="ОТЛОЖЕН"><div class="set-aside"> отложен </div></ng-template>
-                                <ng-template ngSwitchCase="сборка"><div class="assembly"> сборка </div></ng-template>
-                                <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
-                                <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
-                                <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Заказ </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <!-- {{element.name}}  (click)="goToLink(element.id)" [routerLink]="['/order', element.id]" routerLink="/order/{{element.id}}"-->
-                            <a [routerLink]="['/order', element.order.sub_num]"> № {{element.order.num}} - 
-                                <ng-container *ngIf="element.order.name"></ng-container>
-                                <a [ngSwitch]="element.order.name">
-                                    <ng-template ngSwitchCase="8"> Долгиновский </ng-template>
-                                    <ng-template ngSwitchCase="11"> Брест</ng-template>
-                                    <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
-                                    <ng-template ngSwitchCase="25"> Молодечно </ng-template>
-                                </a>
-                            </a>
-                            <br>
-                            <small class="datetime"> {{element.order.datetime}} </small>
-                            <small> Тип доставки: </small>
-                            <small class="delivery-type"> {{element.order.delivery_type}} </small>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="client">
-                        <th mat-header-cell *matHeaderCellDef> Заказчик </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <div  class="fio">{{element.aboutClient.fIO}}</div>
-                            <ng-container *ngIf="element.aboutClient.adress !== ' , , ,'"> <small> {{element.aboutClient.adress}} </small></ng-container> 
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="collector">
-                        <th mat-header-cell *matHeaderCellDef> Сборщик </th>
-                        <td mat-cell *matCellDef="let element"> {{element.aboutWoker}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="place">
-                        <th mat-header-cell *matHeaderCellDef> Место </th>
-                        <td mat-cell *matCellDef="let element"> {{element.place}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="note">
-                        <th mat-header-cell *matHeaderCellDef> Примечание </th>
-                        <td mat-cell *matCellDef="let element"> {{element.info}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Действие </th>
-                        <td mat-cell *matCellDef="let element"> 
-                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
-                                    <mat-icon>pause_circle_outline</mat-icon>
-                                    <span>Приостановить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    <span>Возобновить</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
-                                    <mat-icon>pageview</mat-icon>
-                                    <span>Просмотр</span>
-                                </button>
-                                <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                                    <mat-icon>move_to_inbox</mat-icon>
-                                    <span>Запись в кассу</span>
-                                </button>
-                                <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
-                                    <mat-icon>keyboard_return</mat-icon>
-                                    <span>Вернуть в сборку</span>
-                                </button> -->
-                            </mat-menu>
-                        </td>
-                    </ng-container>    
-                
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-        </ng-scrollbar>
-    </mat-tab>
-</mat-tab-group>
-
-
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Действие </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
+                            <mat-icon>pause_circle_outline</mat-icon>
+                            <span>Приостановить</span>
+                        </button>
+                        <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
+                            <mat-icon>play_arrow</mat-icon>
+                            <span>Возобновить</span>
+                        </button>
+                        <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
+                            <mat-icon>pageview</mat-icon>
+                            <span>Просмотр</span>
+                        </button>
+                        <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span>Запись в кассу</span>
+                        </button>
+                        <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
+                            <mat-icon>keyboard_return</mat-icon>
+                            <span>Вернуть в сборку</span>
+                        </button> -->
+                    </mat-menu>
+                </td>
+            </ng-container>    
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</ng-scrollbar>

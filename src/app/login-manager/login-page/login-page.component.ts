@@ -5,6 +5,7 @@ import { LoginQuery } from '../models/login-query';
 import { LoginService } from '../services/login.service';
 import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
 import { LoginResponse } from '../models/login-response';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login-page',
@@ -24,12 +25,14 @@ export class LoginPageComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private titleService: Title,
     private loginService: LoginService,
     private tokenService: TokenService,
     private snackbarService: SnackbarService,
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('IShop Mile'); 
   }
 
   onClickLogin() {

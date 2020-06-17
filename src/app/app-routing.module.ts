@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginPageComponent } from './login-manager/login-page/login-page.component';
 import { OrderComponent } from './order-manager/order/order.component';
-import { OrderListFormComponent } from './order-manager/order-list-form/order-list-form.component';
 import { OrdersReadyBuildComponent } from './order-manager/orders-ready-build/orders-ready-build.component';
 import { OrdersUncompletedComponent } from './order-manager/orders-uncompleted/orders-uncompleted.component';
 import { OrdersReadyShipmentComponent } from './order-manager/orders-ready-shipment/orders-ready-shipment.component';

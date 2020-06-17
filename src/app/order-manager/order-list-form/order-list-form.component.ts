@@ -1,16 +1,19 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgScrollbar } from 'ngx-scrollbar';
-import { OrderService } from '../services/order/order.service';
-import { StoreService } from 'src/app/common/services/store/store.service';
-import { TokenService } from 'src/app/common/services/token/token.service';
-import { FindOrderReq } from '../models/find-order-req';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { OrderListAnsw } from '../models/order-list-answ';
 import { OrderListReq } from '../models/order-list-req';
-import { timer } from 'rxjs';
-import { ToCassa } from '../models/to-cassa';
-import { PauseOrderReq } from '../models/pause-order-req';
+import { Router } from '@angular/router';
+import { StoreService } from 'src/app/common/services/store/store.service';
+import { OrderService } from '../services/order/order.service';
+import { TokenService } from 'src/app/common/services/token/token.service';
 import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { Location } from "@angular/common";
+import { FindOrderReq } from '../models/find-order-req';
+import { ToCassa } from '../models/to-cassa';
+import { timer } from 'rxjs';
+import { PauseOrderReq } from '../models/pause-order-req';
+import { OrderSearchService } from 'src/app/common/services/order-search/order-search.service';
+import { TimerService } from 'src/app/common/services/timer/timer.service';
 
 
 @Component({
@@ -23,23 +26,26 @@ export class OrderListFormComponent implements OnInit {
   @Input() data: string;
   @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
-  orderListAnswAll: Array<OrderListAnsw> = [];
-  orderListAnswBrest: Array<OrderListAnsw> = [];
-  orderListAnswDolg: Array<OrderListAnsw> = [];
-  orderListAnswKamen: Array<OrderListAnsw> = [];
-  orderListAnswMolodec: Array<OrderListAnsw> = [];
-
-  arrShop = ['F', 'R', 'Y', 'I'];
-
+  orderListAnsw: Array<OrderListAnsw> = [];
+  idShops: Array<any> = [ 
+    { index: 0, id: '%' }, 
+    { index: 1, id: '11' }, 
+    { index: 2, id: '8' }, 
+    { index: 3, id: '22' }, 
+    { index: 4, id: '25' } 
+  ];
+  listStatus: Array<any> = [ 
+    { path: '/orders/ready-build', status: 'gs' }, 
+    { path: '/orders/uncompleted', status: 'ns'  }, 
+    { path: '/orders/ready-shipment', status: 'rs' }, 
+    { path: '/orders/canceled', status: 'os'  }, 
+    { path: '/orders/archive', status: 'as'  } 
+  ];
+  
   displayedColumns = ['status', 'name', 'client', 'collector', 'place', 'note', 'action'];
-
-  searchNumOrder: string = '';
-
-  scrollHeight = 1350;
   countRecord = 0;
-
-  tabIndex: number;
-  idShops: Array<any> = [ { index: 0, id: '%' }, { index: 1, id: '11' }, { index: 2, id: '8' }, { index: 3, id: '22' }, { index: 4, id: '25' } ];
+  scrollHeight = 1350;
+  splitElement = ';';
 
   messageNoConnect = 'Нет соединения, попробуйте позже.';
   action = 'Ok';
@@ -47,20 +53,34 @@ export class OrderListFormComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private location: Location,
+    private timerService: TimerService,
     private storeService: StoreService,
     private orderService: OrderService,
     private tokenService: TokenService,
     private snackbarService: SnackbarService,
-  ) { }
+    private orderSearchService: OrderSearchService,
+  ) { 
+    this.orderSearchService.events$.forEach(value => { 
+      this.onSearchOrder(value) 
+    });
+    this.timerService.events$.forEach(value => { 
+      if(value === 'update') {
+        this.loadData();  
+        this.countRecord = 0; 
+      }
+    });
+  }
 
   ngOnInit(): void {
-    if(this.storeService.getSelectedShop()) {
-      this.tabIndex = +this.storeService.getSelectedShop();
-    }
-    let orderListReq = new OrderListReq(this.tokenService.getToken(), this.getIdShop() ?? '%', this.data ?? 'gs', this.countRecord.toString());
+    this.loadData();
+  }
+
+  loadData() {
+    let orderListReq = new OrderListReq(this.tokenService.getToken(), this.data ?? '%',  this.getStatus() ?? 'gs', this.countRecord.toString());
     this.orderService.getOrders(orderListReq).subscribe(response => {
       if(response) {
-        this.orderListAnswAll = response;
+        this.orderListAnsw = response;
       }
     },
     error => { 
@@ -82,13 +102,13 @@ export class OrderListFormComponent implements OnInit {
   }
 
   dynamicLoadScroll() {
-    if(this.orderListAnswAll.length >= this.countRecord) {
+    if(this.orderListAnsw.length >= this.countRecord) {
       this.countRecord = this.countRecord + 40;
       this.scrollHeight = this.scrollHeight + this.countRecord;
-      let orderListReq = new OrderListReq(this.tokenService.getToken(), this.getIdShop() ?? '%', this.data, this.countRecord.toString());
+      let orderListReq = new OrderListReq(this.tokenService.getToken(), this.data ?? '%',  this.getStatus() ?? 'gs', this.countRecord.toString());
       this.orderService.getOrders(orderListReq).subscribe(response => {
         if(response) {
-          this.orderListAnswAll = this.orderListAnswAll.concat(response);
+          this.orderListAnsw = this.orderListAnsw.concat(response);
         }
       },
       error => { 
@@ -98,28 +118,25 @@ export class OrderListFormComponent implements OnInit {
     }
   }
 
-  onInputSearchData($event) {
-    this.searchNumOrder = $event;
+  getStatus() {
+    return this.listStatus.find(element => element.path === this.location.path()).status;
   }
 
-  onClearNumOrder() {
-    this.searchNumOrder = '';
-  }
-
-  onSearchOrder() {
-    let findOrderReq = new FindOrderReq(this.tokenService.getToken(), this.searchNumOrder, this.getIdShop());
-    this.orderService.orderSearch(findOrderReq).subscribe(response => {
-      if(response) {
-        this.orderListAnswAll = response;
-      }
-    },
-    error => { 
-      console.log(error);
-    });
-  }
-
-  getIdShop() : string {
-    return this.idShops.find(element => element.index === this.tabIndex).id;
+  onSearchOrder(searchValue: string) {
+    if(searchValue) {
+      let findOrderReq = new FindOrderReq(this.tokenService.getToken(), searchValue, this.data);
+      this.orderService.orderSearch(findOrderReq).subscribe(response => {
+        if(response) {
+          this.orderListAnsw = response;
+        }
+      },
+      error => { 
+        console.log(error);
+        this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+      });
+    } else {
+      this.loadData();
+    }
   }
 
   onClickPauseOrGo(element: OrderListAnsw) {
@@ -149,7 +166,7 @@ export class OrderListFormComponent implements OnInit {
     element.order.isCassaPause = true;
     let t = timer(0, 1000).subscribe(vl => { 
       console.log(vl);
-      if(vl >= 15) {
+      if(vl >= 20) {
         element.order.isCassaPause = false;
         t.unsubscribe();
       }
@@ -174,36 +191,4 @@ export class OrderListFormComponent implements OnInit {
       console.log(error);
     });
   }
-
-  selectedTab($event) {
-    this.storeService.setSelectedShop($event.index);
-    this.tabIndex = $event.index;
-    this.loadDataShop();
-  }
-
-  loadDataShop() {
-    let orderListReq = new OrderListReq(this.tokenService.getToken(), this.getIdShop(), this.data, this.countRecord.toString());
-    this.orderService.getOrders(orderListReq).subscribe(response => {
-      if(response) {
-        this.orderListAnswAll = response;
-      }
-    },
-    error => { 
-      console.log(error);
-      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
-    });
-  }
-
-  // onTabClick(event) {
-  //   let el = event.srcElement;
-  //   const attr = el.attributes.getNamedItem('class');
-  //   if (attr.value.indexOf('mat-tab-label-content') >= 0) {
-  //     el = el.parentElement;
-  //   }
-  //   const tabIndex = el.id.substring(el.id.length - 1);
-  //   if (parseInt(tabIndex) === this.tabIndex) {
-  //     // active tab clicked
-  //     console.log(tabIndex);
-  //   }
-  // }
 }

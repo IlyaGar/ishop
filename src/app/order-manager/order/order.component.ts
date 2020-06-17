@@ -25,13 +25,13 @@ export class OrderComponent implements OnInit {
   @ViewChild('barcodePrint', { static: true }) barcodePrint: any;
 
   displayedColumns = ['article', 'name', 'barcode', 'count', 'countReady'];
-  displayedColumnsPrint = ['article', 'name', 'barcode', 'count', 'countReady', 'cost'];
-  dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, 0)];
+  displayedColumnsPrint = ['article', 'name', 'barcode', 'count', 'countReady', 'vatz', 'cost'];
+  dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, '', '', '')];
   client: ClientInfo = new ClientInfo('', '', '');
   orderId = '';
   isDataChanged = false;
 
-  orderBodyAnsw: OrderBodyAnsw = new OrderBodyAnsw('', '', '', new ClientInfo('', '', ''), [new OrderBody('', '', '', '', 0, 0, 0, false, 0)]);
+  orderBodyAnsw: OrderBodyAnsw = new OrderBodyAnsw('', '', '', new ClientInfo('', '', ''), [new OrderBody('', '', '', '', 0, 0, 0, false, '', '', '')]);
   countReadyСhange: number;
   belPostAnsw: BelPostAnsw = null;
   splitElement = ';';
@@ -48,13 +48,10 @@ export class OrderComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.titleService.setTitle(this.titleService.getTitle() + ' №' + this.orderId ); 
+    this.titleService.setTitle(this.titleService.getTitle() + ' №' + this.orderId); 
     let orderBodyReq = new OrderBodyReq(this.tokenService.getToken(), this.orderId)
     this.orderService.getSuborder(orderBodyReq).subscribe(response => {
       if(response) {
-        // this.orderBodyAnsw = response;
-        // this.client = this.orderBodyAnsw.aboutClient;
-        // this.dataSource = this.orderBodyAnsw.body;
         this.getData(response);
       }
     },

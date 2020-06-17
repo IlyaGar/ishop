@@ -28,7 +28,6 @@ import { OrdersReadyShipmentComponent } from './order-manager/orders-ready-shipm
 import { OrdersCanceledComponent } from './order-manager/orders-canceled/orders-canceled.component';
 import { OrdersArchiveComponent } from './order-manager/orders-archive/orders-archive.component';
 import { OrdersFormComponent } from './order-manager/orders-form/orders-form.component';
-import { OrdListComponent } from './order-manager/ord-list/ord-list.component';
 import { BarcodeInputCountFormComponent } from './order-manager/dialog-windows/barcode-input-count-form/barcode-input-count-form.component';
 import { BarcodePrintFormComponent } from './order-manager/components/barcode-print-form/barcode-print-form.component';
 import { SplitPipe } from './pipes/split.pipe';
@@ -51,7 +50,6 @@ import { SplitPipe } from './pipes/split.pipe';
     OrdersCanceledComponent,
     OrdersArchiveComponent,
     OrdersFormComponent,
-    OrdListComponent,
     BarcodeInputCountFormComponent,
     BarcodePrintFormComponent,
     SplitPipe,

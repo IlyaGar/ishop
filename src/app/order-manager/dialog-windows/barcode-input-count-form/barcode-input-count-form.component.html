@@ -2,7 +2,7 @@
     <p>Введите количество штрихкодов</p>
     <mat-form-field>
       <mat-label>Количество</mat-label>
-      <input type="number" matInput [(ngModel)]="count" min="1" max="4" (input)="onChange($event.target.value)">
+      <input type="number" autocomplete="off" matInput [(ngModel)]="count" min="1" max="4" (input)="onChange($event.target.value)">
     </mat-form-field>
     <mat-error *ngIf="isInCorrect"> Количество штрихкодов должно быть от 1 до 4</mat-error>
   </div>

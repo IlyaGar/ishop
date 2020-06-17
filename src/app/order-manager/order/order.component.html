@@ -11,6 +11,7 @@
 <br>
 Подзаказ №{{orderBodyAnsw.sub_num}}
 <br>
+
 <div class="bt-group">
 <!-- (click)="onDecision(requestTask)" -->
     <!-- <button mat-stroked-button> Печать заказа </button> -->
@@ -136,16 +137,21 @@
             <td mat-cell *matCellDef="let element"> {{element.count_g}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="vatz">
+            <th mat-header-cell *matHeaderCellDef> НДС </th>
+            <td mat-cell *matCellDef="let element"> {{element.vatz}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="cost">
             <th mat-header-cell *matHeaderCellDef> Цена </th>
-            <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumnsPrint; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsPrint; let i = index"></tr>
     </table>
 </div>
-<!-- hidden -->
+
 <div id="print-barcode-section" hidden *ngIf="belPostAnsw">
     <app-barcode-print-form [data]="belPostAnsw"></app-barcode-print-form>
 </div>
