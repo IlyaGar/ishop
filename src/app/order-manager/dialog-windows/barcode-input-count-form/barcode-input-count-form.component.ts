@@ -8,8 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class BarcodeInputCountFormComponent implements OnInit {
 
-  count: number = 1;
-  isInCorrect = false;
+  selectedVal: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<BarcodeInputCountFormComponent>,
@@ -23,15 +22,8 @@ export class BarcodeInputCountFormComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onChange($event) {
-    if(this.count < 1 || this.count > 4)
-      this.isInCorrect = true;
-    if(this.count >= 1 && this.count <= 4)
-      this.isInCorrect = false;
-  }
-
   onOkClick() {
-    if(this.count >= 1 && this.count <= 4)
-      this.dialogRef.close(this.count);
+    if(+this.selectedVal >= 1 && +this.selectedVal <= 4)
+      this.dialogRef.close(+this.selectedVal);
   }
 }
