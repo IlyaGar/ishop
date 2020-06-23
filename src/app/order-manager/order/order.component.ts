@@ -24,8 +24,8 @@ export class OrderComponent implements OnInit {
 
   @ViewChild('barcodePrint', { static: true }) barcodePrint: any;
 
-  displayedColumns = ['article', 'name', 'barcode', 'count', 'countReady'];
-  displayedColumnsPrint = ['article', 'name', 'barcode', 'count', 'countReady', 'vatz', 'cost'];
+  displayedColumns = ['article', 'barcode', 'name', 'count', 'countReady'];
+  displayedColumnsPrint = ['article', 'barcode', 'name', 'count', 'countReady', 'vatz', 'cost'];
   dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, '', '', '')];
   client: ClientInfo = new ClientInfo('', '', '');
   orderId = '';
