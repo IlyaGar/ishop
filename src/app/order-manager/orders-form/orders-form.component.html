@@ -8,23 +8,28 @@
     <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value" (click)="onSearchOrder()"> 
         <mat-icon>search</mat-icon> 
     </button>
+
     <span> Список заказов обновится через: {{timerValue}} </span>
+
+    <button class="bt-search" mat-stroked-button *ngIf="checkedOrders" (click)="onListOrdersPauseOrGo()"> 
+        <mat-icon>pause</mat-icon> 
+    </button>
 </div>
 
 <mat-tab-group [(selectedIndex)]="tabIndex" (selectedTabChange)="selectedTab($event)" >
     <mat-tab label="Все">
-        <app-order-list-form [data]="'%'"></app-order-list-form>
+        <app-order-list-form [data]="'%'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
     <mat-tab label="Брест"> 
-        <app-order-list-form *ngIf="tabIndex === 1" [data]="'11'"></app-order-list-form>
+        <app-order-list-form *ngIf="tabIndex === 1" [data]="'11'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
     <mat-tab label="Долгиновский"> 
-        <app-order-list-form *ngIf="tabIndex === 2" [data]="'8'"></app-order-list-form>
+        <app-order-list-form *ngIf="tabIndex === 2" [data]="'8'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
     <mat-tab label="Каменогорская"> 
-        <app-order-list-form *ngIf="tabIndex === 3" [data]="'22'"></app-order-list-form>
+        <app-order-list-form *ngIf="tabIndex === 3" [data]="'22'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
     <mat-tab label="Молодечно"> 
-        <app-order-list-form *ngIf="tabIndex === 4" [data]="'25'"></app-order-list-form>
+        <app-order-list-form *ngIf="tabIndex === 4" [data]="'25'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
 </mat-tab-group>

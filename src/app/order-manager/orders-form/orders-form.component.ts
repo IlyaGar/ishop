@@ -3,6 +3,7 @@ import { OrderSearchService } from 'src/app/common/services/order-search/order-s
 import { TimerService } from 'src/app/common/services/timer/timer.service';
 import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
 import { Title } from '@angular/platform-browser';
+import { OrderListAnsw } from '../models/order-list-answ';
 
 @Component({
   selector: 'app-orders-form',
@@ -16,6 +17,7 @@ export class OrdersFormComponent implements OnInit {
   searchNumOrder: string = '';
   timerValue: any = 120;
   intervalId: any;
+  checkedOrders = false;
 
   constructor(
     private titleService: Title,
@@ -58,5 +60,16 @@ export class OrdersFormComponent implements OnInit {
   onSearchOrder() {
     this.orderSearchService.searchEvent(this.searchNumOrder);
     this.timerValue = 120;
+  }
+
+  onChanged(listOrders: Array<OrderListAnsw>) {
+    if(listOrders.length > 0) 
+      this.checkedOrders = true;
+    else 
+    this.checkedOrders = false;
+  }
+
+  onListOrdersPauseOrGo() {
+    
   }
 }

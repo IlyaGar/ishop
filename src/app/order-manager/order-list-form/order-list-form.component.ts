@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { OrderListAnsw } from '../models/order-list-answ';
 import { OrderListReq } from '../models/order-list-req';
 import { Router } from '@angular/router';
@@ -15,7 +15,6 @@ import { PauseOrderReq } from '../models/pause-order-req';
 import { OrderSearchService } from 'src/app/common/services/order-search/order-search.service';
 import { TimerService } from 'src/app/common/services/timer/timer.service';
 
-
 @Component({
   selector: 'app-order-list-form',
   templateUrl: './order-list-form.component.html',
@@ -24,6 +23,8 @@ import { TimerService } from 'src/app/common/services/timer/timer.service';
 export class OrderListFormComponent implements OnInit {
   
   @Input() data: string;
+  @Output() onChanged = new EventEmitter<Array<OrderListAnsw>>();
+
   @ViewChild(NgScrollbar) scrollbarRef: NgScrollbar;
 
   orderListAnsw: Array<OrderListAnsw> = [];
@@ -42,10 +43,13 @@ export class OrderListFormComponent implements OnInit {
     { path: '/orders/archive', status: 'as'  } 
   ];
   
-  displayedColumns = ['status', 'name', 'client', 'collector', 'place', 'note', 'action'];
+  displayedColumns = ['check', 'status', 'name', 'client', 'collector', 'place', 'note', 'action'];
   countRecord = 0;
   scrollHeight = 1350;
   splitElement = ';';
+
+  checkColumn: boolean = false;
+  listOrders: Array<OrderListAnsw> = [];
 
   messageNoConnect = 'Нет соединения, попробуйте позже.';
   action = 'Ok';
@@ -190,5 +194,30 @@ export class OrderListFormComponent implements OnInit {
     error => { 
       console.log(error);
     });
+  }
+
+  turnOnCheckColumn(e) {
+    this.checkColumn = e;
+    if(e === false) {
+      this.cleanListOrders();
+      this.onChanged.emit(this.listOrders);
+    }
+  }
+
+  selectOrder(element: OrderListAnsw) { 
+    if(!this.listOrders.includes(element))
+      this.listOrders.push(element);
+    else
+      if(this.listOrders.includes(element))
+        this.removeOrderFromListOrders(element);
+    this.onChanged.emit(this.listOrders);
+  }
+
+  removeOrderFromListOrders(element: OrderListAnsw): void {
+    this.listOrders = this.listOrders.filter( e => e.id !== element.id);        
+  }
+
+  cleanListOrders() { 
+    this.listOrders = [];
   }
 }
