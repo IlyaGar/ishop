@@ -26,38 +26,56 @@ export class TokenService {
   }
 
   getToken() {
-    if(this.cookieService.check(this.cookieName)){
-      let fullData = this.cookieService.get(this.cookieName);
-      let loginFromCookie = JSON.parse(fullData);
-      if(loginFromCookie) {
-        return loginFromCookie.token;
+    try {
+      if(this.cookieService.check(this.cookieName)){
+        let fullData = this.cookieService.get(this.cookieName);
+        let loginFromCookie = JSON.parse(fullData);
+        if(loginFromCookie) {
+          return loginFromCookie.token;
+        }
       }
+      else return false;
     }
-    else return false;
+    catch(error) {
+      console.error();
+      alert('login error')
+    }
   }
 
   getLogin() {
-    if(this.cookieService.check(this.cookieName)){
-      let fullData = this.cookieService.get(this.cookieName);
-      let loginFromCookie = JSON.parse(fullData);
-      if(loginFromCookie) {
-        return loginFromCookie.login;
+    try {
+      if(this.cookieService.check(this.cookieName)){
+        let fullData = this.cookieService.get(this.cookieName);
+        let loginFromCookie = JSON.parse(fullData);
+        if(loginFromCookie) {
+          return loginFromCookie.login;
+        }
       }
+      else return false;
     }
-    else return false;
+    catch(error) {
+      console.error();
+      alert('login error')
+    }
   }
 
   getIsAdmin() {
-    if(this.cookieService.check(this.cookieName)){
-      let fullData = this.cookieService.get(this.cookieName);
-      let loginFromCookie = JSON.parse(fullData);
-      if(loginFromCookie) {
-        if(loginFromCookie.adminCount)
-          return loginFromCookie.adminCount;
-        else return '0';
+    try {
+      if(this.cookieService.check(this.cookieName)){
+        let fullData = this.cookieService.get(this.cookieName);
+        let loginFromCookie = JSON.parse(fullData);
+        if(loginFromCookie) {
+          if(loginFromCookie.adminCount)
+            return loginFromCookie.adminCount;
+          else return '0';
+        }
       }
+      else return false;
     }
-    else return false;
+    catch(error) {
+      console.error();
+      alert('login error')
+    }
   }
 
   deleteCookie() {
@@ -68,14 +86,20 @@ export class TokenService {
   }
 
   isLoginUser() : boolean {
-    if(this.cookieService.check(this.cookieName)) {
-      let fullData = this.cookieService.get(this.cookieName);
-      let loginFromCookie = JSON.parse(fullData);
-      if(loginFromCookie) {
-        return true;
+    try {
+      if(this.cookieService.check(this.cookieName)) {
+        let fullData = this.cookieService.get(this.cookieName);
+        let loginFromCookie = JSON.parse(fullData);
+        if(loginFromCookie) {
+          return true;
+        }
       }
+      else return false;
     }
-    else return false;
+    catch(error) {
+      console.error();
+      alert('login error')
+    }
   }
 
   setCookie(loginResponse: LoginResponse) {

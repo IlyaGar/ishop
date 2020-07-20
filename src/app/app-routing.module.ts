@@ -8,6 +8,7 @@ import { OrdersReadyShipmentComponent } from './order-manager/orders-ready-shipm
 import { OrdersCanceledComponent } from './order-manager/orders-canceled/orders-canceled.component';
 import { OrdersArchiveComponent } from './order-manager/orders-archive/orders-archive.component';
 import { OrdersFormComponent } from './order-manager/orders-form/orders-form.component';
+import { EmptyFormComponent } from './common/components/empty-form/empty-form.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/orders/ready-build', pathMatch: 'full' },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'orders/ready-shipment', component: OrdersReadyShipmentComponent },
   { path: 'orders/canceled', component: OrdersCanceledComponent },
   { path: 'orders/archive', component: OrdersArchiveComponent },
-  { path: 'orders', component: OrdersFormComponent }
+  { path: 'orders', component: OrdersFormComponent },
+  { path: 'empty', component: EmptyFormComponent }
 ];
 
 @NgModule({

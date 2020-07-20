@@ -31,6 +31,7 @@ import { OrdersFormComponent } from './order-manager/orders-form/orders-form.com
 import { BarcodeInputCountFormComponent } from './order-manager/dialog-windows/barcode-input-count-form/barcode-input-count-form.component';
 import { BarcodePrintFormComponent } from './order-manager/components/barcode-print-form/barcode-print-form.component';
 import { SplitPipe } from './pipes/split.pipe';
+import { EmptyFormComponent } from './common/components/empty-form/empty-form.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { SplitPipe } from './pipes/split.pipe';
     BarcodeInputCountFormComponent,
     BarcodePrintFormComponent,
     SplitPipe,
+    EmptyFormComponent,
   ],
   imports: [
     AppRoutingModule,
