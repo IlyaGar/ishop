@@ -11,6 +11,7 @@ import { ToCassa } from '../../models/to-cassa';
 import { PauseOrderReq } from '../../models/pause-order-req';
 import { BelPostReq } from '../../models/bel-post-req';
 import { BelPostAnsw } from '../../models/bel-post-answ';
+import { Status } from 'src/app/common/models/status';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class OrderService {
   urlToCassa = this.urlOrder + '/cassa/';
   urlPause = this.urlOrder + '/pause/';
   urlBelpost = this.urlOrder + '/belpost/';
+  urlReturn = this.urlOrder + '/back/';
 
   constructor(private http: HttpClient) { }
 
@@ -61,5 +63,9 @@ export class OrderService {
 
   getBarcode(data: BelPostReq): Observable<BelPostAnsw> {
     return this.http.post<BelPostAnsw>(`${this.urlBelpost}`, data);
+  }
+
+  orderReturn(data: PauseOrderReq): Observable<Status> {
+    return this.http.post<Status>(`${this.urlReturn}`, data);
   }
 }

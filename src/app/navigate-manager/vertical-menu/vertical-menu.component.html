@@ -1,6 +1,7 @@
 <mat-nav-list>
     <a mat-list-item [routerLink]="['orders/ready-build']" [routerLinkActive]="['active']" (click)="reload('/orders/ready-build')"> Готов к сборке </a>
     <a mat-list-item [routerLink]="['orders/uncompleted']" [routerLinkActive]="['active']" (click)="reload('/orders/uncompleted')"> Некомплект </a>
+    <!-- <a mat-list-item [routerLink]="['orders/canceled']" [routerLinkActive]="['active']" (click)="reload('/orders/in-assembly')"> В сборке </a> -->
     <a mat-list-item [routerLink]="['orders/ready-shipment']" [routerLinkActive]="['active']" (click)="reload('/orders/ready-shipment')"> Готов к отгрузке </a>
     <!-- <a mat-list-item [routerLink]="['']"> Отправлен </a> -->
     <a mat-list-item [routerLink]="['orders/canceled']" [routerLinkActive]="['active']" (click)="reload('/orders/canceled')"> Отменен </a>

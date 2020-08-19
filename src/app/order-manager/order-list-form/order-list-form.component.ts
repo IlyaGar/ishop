@@ -14,6 +14,8 @@ import { timer } from 'rxjs';
 import { PauseOrderReq } from '../models/pause-order-req';
 import { OrderSearchService } from 'src/app/common/services/order-search/order-search.service';
 import { TimerService } from 'src/app/common/services/timer/timer.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmReturnProductComponent } from '../dialog-windows/confirm-return-product/confirm-return-product.component';
 
 @Component({
   selector: 'app-order-list-form',
@@ -56,6 +58,7 @@ export class OrderListFormComponent implements OnInit {
   styleNoConnect = 'red-snackbar';
 
   constructor(
+    public dialog: MatDialog,
     private router: Router,
     private location: Location,
     private timerService: TimerService,
@@ -220,4 +223,46 @@ export class OrderListFormComponent implements OnInit {
   cleanListOrders() { 
     this.listOrders = [];
   }
+
+  onClickReturnProduct(element: OrderListAnsw) {
+    const dialogRef = this.dialog.open(ConfirmReturnProductComponent, {
+      width: "60%",
+      data: { element: element },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), element.order.sub_num);
+        this.orderService.orderReturn(pauseOrderReq).subscribe(response => {
+          switch(response.status) {
+            case 'auth error':
+              this.snackbarService.openSnackBar('Неверная идентификация.', this.action);
+              break;
+
+            case 'fail':
+              this.snackbarService.openSnackBar('Неверный запрос.', this.action);
+              break;
+
+            case 'false ':
+              this.snackbarService.openSnackBar('Подзаказ не найден.', this.action);
+              break;
+
+            case 'status error':
+              this.snackbarService.openSnackBar('Статус заказа не соотвествует.', this.action);
+              break;
+
+            case 'returned already':
+              this.snackbarService.openSnackBar('Подзаказ был уже возвращен', this.action);
+              break;
+
+              default: 
+              this.snackbarService.openSnackBar('Подзаказ возвращен', this.action);
+                break;
+          }
+        },
+        error => { 
+          console.log(error);
+        });
+      }
+    });
+  }ы
 }

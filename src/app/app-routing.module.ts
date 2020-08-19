@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'order/:id', component: OrderComponent, data: { status : 'status' } },
   { path: 'orders/ready-build', component: OrdersReadyBuildComponent },
+  // { path: 'orders/in-assembly', component: OrdersReadyBuildComponent },
   { path: 'orders/uncompleted', component: OrdersUncompletedComponent },
   { path: 'orders/ready-shipment', component: OrdersReadyShipmentComponent },
   { path: 'orders/canceled', component: OrdersCanceledComponent },

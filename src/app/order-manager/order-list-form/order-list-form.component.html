@@ -24,6 +24,7 @@ thumbClass="custom-scrollbars">
                         <ng-template ngSwitchCase="в паузе"><div class="shortage"> некомплект </div></ng-template>
                         <ng-template ngSwitchCase="завершен"><div class="ready-shipment"> готов к отгрузке </div></ng-template>
                         <ng-template ngSwitchCase="Отмена"><div class="cancel"> отмена </div></ng-template>
+                        <ng-template ngSwitchCase="Отправлен"><div class="return"> отправлен </div></ng-template>
                     </div>
                 </td>
             </ng-container>
@@ -97,6 +98,13 @@ thumbClass="custom-scrollbars">
                         <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
                             <mat-icon>move_to_inbox</mat-icon>
                             <span>Запись в кассу</span>
+                        </button>
+                        <button mat-menu-item (click)="onClickReturnProduct(element)" 
+                                                *ngIf="element.status === 'ОТЛОЖЕН' 
+                                                || element.status === 'Отмена' 
+                                                || element.status === 'Отправлен'">
+                            <mat-icon>move_to_inbox</mat-icon>
+                            <span>Возврат продукции</span>
                         </button>
                         <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
                             <mat-icon>keyboard_return</mat-icon>

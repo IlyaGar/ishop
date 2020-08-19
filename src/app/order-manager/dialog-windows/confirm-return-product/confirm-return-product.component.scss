@@ -1,0 +1,42 @@
+table {
+    width: 100%;
+}
+.fio {
+    color: rgb(43, 198, 226);
+}
+.delivery-type {
+    color: rgba(3, 161, 11, 0.753);
+}
+.datetime {
+    margin-right: 2em;
+}
+.return {
+    color: chartreuse;
+}
+.ready-collect {
+    color: blue;
+}
+.set-aside {
+    color: #836f00;
+}
+.assembly {
+    color: rgb(94, 194, 228);
+}
+.shortage {
+    color: orange;
+}
+.ready-shipment {
+    color: green;
+}
+.cancel {
+    color: gray;
+}
+mat-button-toggle {
+    width: 25%;
+}
+mat-button-toggle-group {
+    width: 100%;
+}
+.mat-dialog-actions {
+    float: right;
+}

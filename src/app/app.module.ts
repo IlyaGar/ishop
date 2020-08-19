@@ -32,6 +32,8 @@ import { BarcodeInputCountFormComponent } from './order-manager/dialog-windows/b
 import { BarcodePrintFormComponent } from './order-manager/components/barcode-print-form/barcode-print-form.component';
 import { SplitPipe } from './pipes/split.pipe';
 import { EmptyFormComponent } from './common/components/empty-form/empty-form.component';
+import { OrdersInAssemblyComponent } from './order-manager/orders-in-assembly/orders-in-assembly.component';
+import { ConfirmReturnProductComponent } from './order-manager/dialog-windows/confirm-return-product/confirm-return-product.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,8 @@ import { EmptyFormComponent } from './common/components/empty-form/empty-form.co
     BarcodePrintFormComponent,
     SplitPipe,
     EmptyFormComponent,
+    OrdersInAssemblyComponent,
+    ConfirmReturnProductComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -75,7 +79,8 @@ import { EmptyFormComponent } from './common/components/empty-form/empty-form.co
     CookieService,
   ],
   entryComponents: [
-    BarcodeInputCountFormComponent
+    BarcodeInputCountFormComponent,
+    ConfirmReturnProductComponent,
   ],
   bootstrap: [AppComponent]
 })

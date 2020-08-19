@@ -1,7 +1,7 @@
 <div class="gr-search row">
     <mat-form-field appearance="outline">
         <mat-label>Номер заказа</mat-label>
-        <input type="number" matInput placeholder="Введите номер заказа" (input)="onInputSearchData($event.target.value)" #numOrder min="0">
+        <input type="number" matInput placeholder="Введите номер заказа" (input)="onInputSearchData($event.target.value)" #numOrder min="0" (keyup.enter)="onSearchOrder()">
         <mat-icon id="close" matSuffix *ngIf="numOrder.value.length > 0" (click)="onClearNumOrder(); numOrder.value = ''">close</mat-icon>
     </mat-form-field>
 
