@@ -26,6 +26,8 @@ export class OrderService {
   urlPause = this.urlOrder + '/pause/';
   urlBelpost = this.urlOrder + '/belpost/';
   urlReturn = this.urlOrder + '/back/';
+  urlReturnToAssembly = this.urlOrder + '/backorder/';
+  urlDlete = this.urlOrder + '/delete/';
 
   constructor(private http: HttpClient) { }
 
@@ -57,8 +59,8 @@ export class OrderService {
     return this.http.post<any>(`${this.urlToCassa}`, data);
   }
 
-  orderReturnToAssembly(data): Observable<any> {
-    return this.http.post<any>(`${this.urlOrder}`, data);
+  orderReturnToAssembly(data: PauseOrderReq): Observable<Status> {
+    return this.http.post<Status>(`${this.urlReturnToAssembly}`, data);
   }
 
   getBarcode(data: BelPostReq): Observable<BelPostAnsw> {
@@ -67,5 +69,13 @@ export class OrderService {
 
   orderReturn(data: PauseOrderReq): Observable<Status> {
     return this.http.post<Status>(`${this.urlReturn}`, data);
+  }
+
+  orderDelete(data: PauseOrderReq): Observable<Status> {
+    return this.http.post<Status>(`${this.urlDlete}`, data);
+  }
+
+  orderSendInOMS(data: PauseOrderReq): Observable<Status> {
+    return this.http.post<Status>(`${'this.urlSendInOMS'}`, data);
   }
 }

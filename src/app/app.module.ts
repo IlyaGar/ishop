@@ -34,6 +34,7 @@ import { SplitPipe } from './pipes/split.pipe';
 import { EmptyFormComponent } from './common/components/empty-form/empty-form.component';
 import { OrdersInAssemblyComponent } from './order-manager/orders-in-assembly/orders-in-assembly.component';
 import { ConfirmReturnProductComponent } from './order-manager/dialog-windows/confirm-return-product/confirm-return-product.component';
+import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,9 @@ import { ConfirmReturnProductComponent } from './order-manager/dialog-windows/co
     AngularMaterialModule,
     NgxPrintModule,
     NgScrollbarModule,
+    ConfirmationPopoverModule.forRoot({
+      confirmButtonType: 'danger', 
+    }),
   ],
   exports: [AngularMaterialModule],
   providers: [    

@@ -79,37 +79,74 @@ thumbClass="custom-scrollbars">
             <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef> Действие </th>
                 <td mat-cell *matCellDef="let element"> 
+
                     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
+
                     <mat-menu #menu="matMenu">
+
                         <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'не принят'">
                             <mat-icon>pause_circle_outline</mat-icon>
                             <span>Приостановить</span>
                         </button>
+                        
                         <button mat-menu-item (click)="onClickPauseOrGo(element)" *ngIf="element.status === 'ОТЛОЖЕН'">
                             <mat-icon>play_arrow</mat-icon>
                             <span>Возобновить</span>
                         </button>
+
                         <button mat-menu-item (click)="onClickShow(element.order.sub_num)">
                             <mat-icon>pageview</mat-icon>
                             <span>Просмотр</span>
                         </button>
+
                         <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
                             <mat-icon>move_to_inbox</mat-icon>
                             <span>Запись в кассу</span>
                         </button>
-                        <button mat-menu-item (click)="onClickReturnProduct(element)" 
-                                                *ngIf="element.status === 'ОТЛОЖЕН' 
-                                                || element.status === 'Отмена' 
-                                                || element.status === 'Отправлен'">
+
+                        <button mat-menu-item 
+                            (click)="onClickReturnProduct(element)" 
+                            *ngIf="(element.status === 'ОТЛОЖЕН' 
+                            || element.status === 'Отмена' 
+                            || element.status === 'Отправлен')
+                            && isAdminIshop">
                             <mat-icon>move_to_inbox</mat-icon>
                             <span>Возврат продукции</span>
                         </button>
-                        <!-- <button mat-menu-item (click)="onClickReturnToAssembly(element.id)">
+
+                        <button mat-menu-item 
+                            *ngIf="(element.status === 'в паузе'
+                            || element.status === 'завершен') 
+                            && isAdminIshop" 
+                            (click)="onClickReturnToAssembly(element.order.sub_num)">
                             <mat-icon>keyboard_return</mat-icon>
-                            <span>Вернуть в сборку</span>
+                            <span style="color: blue;">Вернуть в сборку</span>
+                        </button>
+
+                        <!-- <button mat-menu-item (click)="onSendInOMS(element.order.sub_num)">
+                            <mat-icon>arrow_right_alt</mat-icon>
+                            <span>OMS</span>
                         </button> -->
+
+                        <button mat-menu-item 
+                            *ngIf="isAdminIshop"
+                            id="butt-cancel"
+                            color="primary"
+                            class="btn btn-default"
+                            mwlConfirmationPopover
+                            [popoverMessage]="'Вы действительно хотите <b>удалить</b> подзаказ?'"
+                            [confirmText]="'Да'"
+                            [cancelText]="'Нет'"
+                            placement="left"
+                            (click)="$event.stopPropagation();"
+                            (confirm)="onDelete(element)"
+                            (cancel)="cancelClicked = true">
+                            <mat-icon>delete_forever</mat-icon>
+                            <span style="color: red;">Удалить</span>
+                        </button> 
+                        
                         <!-- <button mat-menu-item>
                             <mat-icon>keyboard_return</mat-icon>
                             <span>Провести возврат</span>

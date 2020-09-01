@@ -16,6 +16,7 @@ import { OrderSearchService } from 'src/app/common/services/order-search/order-s
 import { TimerService } from 'src/app/common/services/timer/timer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmReturnProductComponent } from '../dialog-windows/confirm-return-product/confirm-return-product.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-order-list-form',
@@ -49,6 +50,12 @@ export class OrderListFormComponent implements OnInit {
   countRecord = 0;
   scrollHeight = 1350;
   splitElement = ';';
+  confirmText: string = 'Да';
+  cancelText: string = 'Нет';
+  cancelClicked = false;
+  confirmClicked = false;
+  isAdminIshop = false;
+  searchValue = '';
 
   checkColumn: boolean = false;
   listOrders: Array<OrderListAnsw> = [];
@@ -81,6 +88,7 @@ export class OrderListFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    this.isAdminIshop = this.getAdminIshop();
   }
 
   loadData() {
@@ -131,6 +139,7 @@ export class OrderListFormComponent implements OnInit {
 
   onSearchOrder(searchValue: string) {
     if(searchValue) {
+      this.searchValue = searchValue;
       let findOrderReq = new FindOrderReq(this.tokenService.getToken(), searchValue, this.data);
       this.orderService.orderSearch(findOrderReq).subscribe(response => {
         if(response) {
@@ -190,15 +199,6 @@ export class OrderListFormComponent implements OnInit {
     });
   }
 
-  onClickReturnToAssembly(id) {
-    this.orderService.orderReturnToAssembly(id).subscribe(response => {
-
-    },
-    error => { 
-      console.log(error);
-    });
-  }
-
   turnOnCheckColumn(e) {
     this.checkColumn = e;
     if(e === false) {
@@ -235,23 +235,23 @@ export class OrderListFormComponent implements OnInit {
         this.orderService.orderReturn(pauseOrderReq).subscribe(response => {
           switch(response.status) {
             case 'auth error':
-              this.snackbarService.openSnackBar('Неверная идентификация.', this.action);
+              this.snackbarService.openSnackBar('Неверная идентификация.', this.action, this.styleNoConnect);
               break;
 
             case 'fail':
-              this.snackbarService.openSnackBar('Неверный запрос.', this.action);
+              this.snackbarService.openSnackBar('Неверный запрос.', this.action, this.styleNoConnect);
               break;
 
             case 'false ':
-              this.snackbarService.openSnackBar('Подзаказ не найден.', this.action);
+              this.snackbarService.openSnackBar('Подзаказ не найден.', this.action, this.styleNoConnect);
               break;
 
             case 'status error':
-              this.snackbarService.openSnackBar('Статус заказа не соотвествует.', this.action);
+              this.snackbarService.openSnackBar('Статус заказа не соотвествует.', this.action, this.styleNoConnect);
               break;
 
             case 'returned already':
-              this.snackbarService.openSnackBar('Подзаказ был уже возвращен', this.action);
+              this.snackbarService.openSnackBar('Подзаказ был уже возвращен', this.action, this.styleNoConnect);
               break;
 
               default: 
@@ -264,5 +264,50 @@ export class OrderListFormComponent implements OnInit {
         });
       }
     });
-  }ы
+  }
+
+  onSendInOMS(id) {
+    let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), id);
+    this.orderService.orderSendInOMS(pauseOrderReq).subscribe(response => {
+
+    },
+    error => { 
+      console.log(error);
+      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+    });
+  }
+
+  onClickReturnToAssembly(id) {
+    let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), id);
+    this.orderService.orderReturnToAssembly(pauseOrderReq).subscribe(response => {
+      if(response.status === 'true')
+        this.snackbarService.openSnackBar('Подзаказ возвращен в сборку', this.action,);
+      else this.snackbarService.openSnackBar('Операция не выполнена', this.action, this.styleNoConnect);
+    },
+    error => { 
+      console.log(error);
+      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+    });
+  }
+
+  onDelete(element: OrderListAnsw) {
+    let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), element.order.sub_num);
+    this.orderService.orderDelete(pauseOrderReq).subscribe(response => {
+      if(response.status === 'true') {
+        this.snackbarService.openSnackBar('Подзаказ удален', this.action,);
+        if(this.searchValue)
+          this.onSearchOrder(this.searchValue);
+        else this.loadData();
+      } 
+      else this.snackbarService.openSnackBar('Операция не выполнена', this.action, this.styleNoConnect);
+    },
+    error => { 
+      console.log(error);
+      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+    });
+  }
+
+  getAdminIshop() : boolean {
+    return environment.listAdminsIshop.includes(this.tokenService.getLogin());
+  }
 }

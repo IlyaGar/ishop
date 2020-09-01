@@ -11,6 +11,8 @@ export class ConfirmReturnProductComponent implements OnInit {
 
   displayedColumns = ['status', 'name', 'client', 'collector', 'place', 'note'];
   dateSourse: Array<OrderListAnsw> = [];
+  splitElement = ';';
+  
   constructor(
     public dialogRef: MatDialogRef<ConfirmReturnProductComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
