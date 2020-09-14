@@ -310,4 +310,25 @@ export class OrderListFormComponent implements OnInit {
   getAdminIshop() : boolean {
     return environment.listAdminsIshop.includes(this.tokenService.getLogin());
   }
+
+  onClickSendToBitrix(element: OrderListAnsw) {
+    element.order.isSendToBitrix = true;
+    let t = timer(0, 1000).subscribe(vl => { 
+      console.log(vl);
+      if(vl >= 20) {
+        element.order.isSendToBitrix = false;
+        t.unsubscribe();
+      }
+    });
+    let findOrderReq = new FindOrderReq(this.tokenService.getToken(), element.order.num, '');
+    this.orderService.orderSendToBitrix(findOrderReq).subscribe(response => {
+      if(response.status) {
+        this.snackbarService.openSnackBar(response.status, this.action);
+      }
+    },
+    error => { 
+      console.log(error);
+      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+    });
+  }
 }

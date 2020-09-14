@@ -32,4 +32,7 @@
     <mat-tab label="Молодечно"> 
         <app-order-list-form *ngIf="tabIndex === 4" [data]="'25'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
+    <mat-tab label="Тимирязева"> 
+        <app-order-list-form *ngIf="tabIndex === 5" [data]="'21'" (onChanged)="onChanged($event)"></app-order-list-form>
+    </mat-tab>
 </mat-tab-group>

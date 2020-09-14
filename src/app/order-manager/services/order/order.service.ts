@@ -28,6 +28,7 @@ export class OrderService {
   urlReturn = this.urlOrder + '/back/';
   urlReturnToAssembly = this.urlOrder + '/backorder/';
   urlDlete = this.urlOrder + '/delete/';
+  urlToBitrix = this.urlOrder + '/oms/';
 
   constructor(private http: HttpClient) { }
 
@@ -77,5 +78,9 @@ export class OrderService {
 
   orderSendInOMS(data: PauseOrderReq): Observable<Status> {
     return this.http.post<Status>(`${'this.urlSendInOMS'}`, data);
+  }
+
+  orderSendToBitrix(data: FindOrderReq): Observable<Status> {
+    return this.http.post<Status>(`${this.urlToBitrix}`, data);
   }
 }

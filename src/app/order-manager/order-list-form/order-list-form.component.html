@@ -39,6 +39,7 @@ thumbClass="custom-scrollbars">
                             <ng-template ngSwitchCase="11"> Брест</ng-template>
                             <ng-template ngSwitchCase="22"> Каменогорская </ng-template>
                             <ng-template ngSwitchCase="25"> Молодечно </ng-template>
+                            <ng-template ngSwitchCase="21"> Тимирязева </ng-template>
                         </a>
                     </a>
                     <br>
@@ -102,8 +103,8 @@ thumbClass="custom-scrollbars">
                         </button>
 
                         <button mat-menu-item (click)="onClickWriteToCashbox(element)" *ngIf="element.order.isCassa && element.status === 'завершен'" [disabled]="element.order.isCassaPause">
-                            <mat-icon>move_to_inbox</mat-icon>
-                            <span>Запись в кассу</span>
+                            <mat-icon style="color: rgba(65, 155, 38, 0.877);">move_to_inbox</mat-icon>
+                            <span style="color: rgba(65, 155, 38, 0.877);">Запись в кассу</span>
                         </button>
 
                         <button mat-menu-item 
@@ -112,8 +113,8 @@ thumbClass="custom-scrollbars">
                             || element.status === 'Отмена' 
                             || element.status === 'Отправлен')
                             && isAdminIshop">
-                            <mat-icon>move_to_inbox</mat-icon>
-                            <span>Возврат продукции</span>
+                            <mat-icon style="color: rgb(21, 197, 188);">move_to_inbox</mat-icon>
+                            <span style="color: rgb(21, 197, 188);">Возврат продукции</span>
                         </button>
 
                         <button mat-menu-item 
@@ -121,7 +122,7 @@ thumbClass="custom-scrollbars">
                             || element.status === 'завершен') 
                             && isAdminIshop" 
                             (click)="onClickReturnToAssembly(element.order.sub_num)">
-                            <mat-icon>keyboard_return</mat-icon>
+                            <mat-icon style="color: blue;">keyboard_return</mat-icon>
                             <span style="color: blue;">Вернуть в сборку</span>
                         </button>
 
@@ -129,6 +130,13 @@ thumbClass="custom-scrollbars">
                             <mat-icon>arrow_right_alt</mat-icon>
                             <span>OMS</span>
                         </button> -->
+
+                        <button mat-menu-item (click)="onClickSendToBitrix(element)" 
+                        *ngIf="(element.status === 'в паузе' || element.status === 'завершен') && isAdminIshop"
+                        [disabled]="element.order.isSendToBitrix">
+                            <mat-icon style="color: rgb(255, 166, 0);">send</mat-icon>
+                            <span style="color: rgb(255, 166, 0);">Оправить в OMS</span>
+                        </button>
 
                         <button mat-menu-item 
                             *ngIf="isAdminIshop"
@@ -143,7 +151,7 @@ thumbClass="custom-scrollbars">
                             (click)="$event.stopPropagation();"
                             (confirm)="onDelete(element)"
                             (cancel)="cancelClicked = true">
-                            <mat-icon>delete_forever</mat-icon>
+                            <mat-icon style="color: red;">delete_forever</mat-icon>
                             <span style="color: red;">Удалить</span>
                         </button> 
                         

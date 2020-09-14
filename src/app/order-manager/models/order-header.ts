@@ -9,5 +9,6 @@ export class OrderHeader{
         public isCassaPause: boolean,
         public isReturn: boolean,
         public virtual_products: string,
+        public isSendToBitrix: boolean,
     ){}
 }
