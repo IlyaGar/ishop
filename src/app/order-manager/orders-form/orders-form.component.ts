@@ -4,6 +4,7 @@ import { TimerService } from 'src/app/common/services/timer/timer.service';
 import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
 import { Title } from '@angular/platform-browser';
 import { OrderListAnsw } from '../models/order-list-answ';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-orders-form',
@@ -18,6 +19,7 @@ export class OrdersFormComponent implements OnInit {
   timerValue: any = 120;
   intervalId: any;
   checkedOrders = false;
+  pause = false;
 
   constructor(
     private titleService: Title,
@@ -58,8 +60,18 @@ export class OrdersFormComponent implements OnInit {
   }
 
   onSearchOrder() {
-    this.orderSearchService.searchEvent(this.searchNumOrder);
     this.timerValue = 120;
+    if(!this.pause) {
+      this.orderSearchService.searchEvent(this.searchNumOrder);
+      this.pause = true;
+      let t = timer(0, 1000).subscribe(vl => { 
+        console.log(vl);
+        if(vl >= 3) {
+          this.pause = false;
+          t.unsubscribe();
+        }
+      });
+    }
   }
 
   onChanged(listOrders: Array<OrderListAnsw>) {
