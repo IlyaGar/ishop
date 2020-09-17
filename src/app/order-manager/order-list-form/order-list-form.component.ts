@@ -36,7 +36,8 @@ export class OrderListFormComponent implements OnInit {
     { index: 1, id: '11' }, 
     { index: 2, id: '8' }, 
     { index: 3, id: '22' }, 
-    { index: 4, id: '25' } 
+    { index: 4, id: '25' },
+    { index: 5, id: '21' } 
   ];
   listStatus: Array<any> = [ 
     { path: '/orders/ready-build', status: 'gs' }, 
@@ -55,7 +56,7 @@ export class OrderListFormComponent implements OnInit {
   cancelClicked = false;
   confirmClicked = false;
   isAdminIshop = false;
-  searchValue = '';
+  searchValue: any = null;
 
   checkColumn: boolean = false;
   listOrders: Array<OrderListAnsw> = [];
@@ -76,32 +77,48 @@ export class OrderListFormComponent implements OnInit {
     private orderSearchService: OrderSearchService,
   ) { 
     this.orderSearchService.events$.forEach(value => { 
-      this.onSearchOrder(value) 
+      this.searchOrder(value) 
     });
     this.timerService.events$.forEach(value => { 
-      if(value === 'update') {
-        this.loadData();  
+      if(value) {
+        this.loadData(value);  
         this.countRecord = 0; 
       }
     });
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadData(this.searchValue);
     this.isAdminIshop = this.getAdminIshop();
   }
 
-  loadData() {
-    let orderListReq = new OrderListReq(this.tokenService.getToken(), this.data ?? '%',  this.getStatus() ?? 'gs', this.countRecord.toString());
-    this.orderService.getOrders(orderListReq).subscribe(response => {
-      if(response) {
-        this.orderListAnsw = response;
+  loadData(value) {
+    if(!value) {
+      let orderListReq = new OrderListReq(this.tokenService.getToken(), this.data ?? '%',  this.getStatus() ?? 'gs', this.countRecord.toString());
+      this.orderService.getOrders(orderListReq).subscribe(response => {
+        if(response) {
+          this.orderListAnsw = response;
+        }
+      },
+      error => { 
+        console.log(error);
+        this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+      });
+    }
+    else {
+      if(this.data === this.getShop(value)) {
+        let orderListReq = new OrderListReq(this.tokenService.getToken(), this.data,  this.getStatus() ?? 'gs', this.countRecord.toString());
+        this.orderService.getOrders(orderListReq).subscribe(response => {
+          if(response) {
+            this.orderListAnsw = response;
+          }
+        },
+        error => { 
+          console.log(error);
+          this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+        });
       }
-    },
-    error => { 
-      console.log(error);
-      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
-    });
+    }
   }
 
   ngAfterViewInit() {
@@ -137,21 +154,27 @@ export class OrderListFormComponent implements OnInit {
     return this.listStatus.find(element => element.path === this.location.path()).status;
   }
 
-  onSearchOrder(searchValue: string) {
-    if(searchValue) {
-      this.searchValue = searchValue;
-      let findOrderReq = new FindOrderReq(this.tokenService.getToken(), searchValue, this.data);
-      this.orderService.orderSearch(findOrderReq).subscribe(response => {
-        if(response) {
-          this.orderListAnsw = response;
-        }
-      },
-      error => { 
-        console.log(error);
-        this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
-      });
+  getShop(index) {
+    return index ? this.idShops.find(element => element.index === index).id : '%';
+  }
+
+  searchOrder(searchValue: any) {
+    if(searchValue.order) {
+      if(searchValue.order && this.getShop(searchValue.shop) === this.data) {
+        this.searchValue = searchValue;
+        let findOrderReq = new FindOrderReq(this.tokenService.getToken(), searchValue.order, this.data);
+        this.orderService.orderSearch(findOrderReq).subscribe(response => {
+          if(response) {
+            this.orderListAnsw = response;
+          }
+        },
+        error => { 
+          console.log(error);
+          this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+        });
+      }
     } else {
-      this.loadData();
+      this.loadData(null);
     }
   }
 
@@ -296,8 +319,8 @@ export class OrderListFormComponent implements OnInit {
       if(response.status === 'true') {
         this.snackbarService.openSnackBar('Подзаказ удален', this.action,);
         if(this.searchValue)
-          this.onSearchOrder(this.searchValue);
-        else this.loadData();
+          this.searchOrder(this.searchValue);
+        else this.loadData(null);
       } 
       else this.snackbarService.openSnackBar('Операция не выполнена', this.action, this.styleNoConnect);
     },

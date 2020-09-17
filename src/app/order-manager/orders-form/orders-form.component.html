@@ -5,7 +5,7 @@
         <mat-icon id="close" matSuffix *ngIf="numOrder.value.length > 0" (click)="onClearNumOrder(); numOrder.value = ''">close</mat-icon>
     </mat-form-field>
 
-    <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value" (click)="onSearchOrder()"> 
+    <button class="bt-search" mat-stroked-button [disabled]="!numOrder.value || pause" (click)="onSearchOrder()"> 
         <mat-icon>search</mat-icon> 
     </button>
 

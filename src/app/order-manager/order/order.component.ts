@@ -14,6 +14,8 @@ import { BelPostReq } from '../models/bel-post-req';
 import { BelPostAnsw } from '../models/bel-post-answ';
 import { BarcodeInputCountFormComponent } from '../dialog-windows/barcode-input-count-form/barcode-input-count-form.component';
 import { timer } from 'rxjs';
+import { Changer } from '../models/changer';
+import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-order',
@@ -26,15 +28,19 @@ export class OrderComponent implements OnInit {
 
   displayedColumns = ['article', 'barcode', 'name', 'count', 'countReady'];
   displayedColumnsPrint = ['article', 'barcode', 'name', 'count', 'countReady', 'vatz', 'cost'];
-  dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', 0, 0, 0, false, '', '', '')];
+  dataSource: Array<OrderBody> = [new OrderBody('', '', '', '', '0', '0', '0', false, '', '', '')];
   client: ClientInfo = new ClientInfo('', '', '');
   orderId = '';
   isDataChanged = false;
 
-  orderBodyAnsw: OrderBodyAnsw = new OrderBodyAnsw('', '', '', new ClientInfo('', '', ''), [new OrderBody('', '', '', '', 0, 0, 0, false, '', '', '')]);
+  orderBodyAnsw: OrderBodyAnsw = new OrderBodyAnsw('', '', '', new ClientInfo('', '', ''), [new OrderBody('', '', '', '', '0', '0', '0', false, '', '', '')]);
   countReadyСhange: number;
   belPostAnsw: BelPostAnsw = null;
   splitElement = ';';
+
+  messageNoConnect = 'Нет соединения, попробуйте позже.';
+  action = 'Ok';
+  styleNoConnect = 'red-snackbar';
 
   constructor(
     public dialog: MatDialog,
@@ -43,6 +49,7 @@ export class OrderComponent implements OnInit {
     private route: ActivatedRoute,
     private orderService: OrderService,
     private tokenService: TokenService,
+    private snackbarService: SnackbarService,
   ) {
     this.orderId = route.snapshot.params['id'];
    }
@@ -66,10 +73,23 @@ export class OrderComponent implements OnInit {
     this.dataSource = this.orderBodyAnsw.body;
   }
 
-  onInputNewCount(event: string, element: OrderBody) : void{
-    element.count_gСhange = +event;
-    element.changed = true;
-    this.isDataChanged = this.checkDataChanged();
+  onInputNewCount(event: string, element: OrderBody) : void {
+    if(event.length >= 0) {
+      element.count_g = event;
+      element.changed = true;
+      this.isDataChanged = this.checkDataChanged();
+      if(+element.count_g > +element.count_e)
+        element.count_g = element.count_e;
+      if(!element.count_g)
+        element.count_g = '0';
+    } 
+  }
+
+  onFocusout(element) {
+    if(+element.count_g > +element.count_e)
+      element.count_g = element.count_e;
+    if(!element.count_g)
+      element.count_g = '0';
   }
 
   onClearCount(element: OrderBody) : void {
@@ -79,8 +99,30 @@ export class OrderComponent implements OnInit {
   }
 
   onSaveChanges() : void {
+    // this.dataSource.map(element => {
+    //   if(element.count_gСhange)
+    //     element.count_g = element.count_gСhange ? element.count_gСhange.toString() : '0';
+    //   delete element.count_gСhange;
+    //   delete element.changed;
+    // });
+
     this.dataSource.map(element => {
-      element.count_g = element.count_gСhange;
+      if(element.count_g > element.count_e)
+        element.count_g = element.count_e;
+      delete element.count_gСhange;
+      delete element.changed;
+    });
+
+    let order = new Changer(this.tokenService.getToken(), this.orderBodyAnsw);
+
+    this.orderService.orderSaveChange(order).subscribe(response => {
+      if(response.status === '200 OK') {
+        this.snackbarService.openSnackBar('Количество изменено', this.action);
+      }
+    },
+    error => { 
+      console.log(error);
+      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
     });
   }
 

@@ -72,11 +72,17 @@
         <ng-container matColumnDef="countReady">
             <th mat-header-cell *matHeaderCellDef> Собраное количество </th>
             <td mat-cell *matCellDef="let element; let i = index"> 
-                <mat-form-field appearance="outline">
+                <!-- <mat-form-field appearance="outline">
                     <mat-label>{{element.count_g}}</mat-label>
-                    <input type="number" autocomplete="off" matInput placeholder="Количество" (input)="onInputNewCount($event.target.value, element)" #countChage min="0">
+                    <input type="number" autocomplete="off" matInput placeholder="Количество" (input)="onInputNewCount($event.target.value, element)" #countChage min="0" max="2">
                     <mat-icon id="close" matSuffix *ngIf="countChage.value.length > 0" (click)="onClearCount(element); countChage.value = ''">close</mat-icon>
+                </mat-form-field> -->
+
+                <mat-form-field appearance="outline">
+                    <input type="number" autocomplete="off" matInput placeholder="Количество" [(ngModel)]="element.count_g" (input)="onInputNewCount($event.target.value, element)" (focusout)="onFocusout(element)" min="0" max="element.count_e">
+                    <!-- <mat-icon id="close" matSuffix *ngIf="element.count_g.length > 0" (click)="onClearCount(element);">close</mat-icon> -->
                 </mat-form-field>
+
             </td>
         </ng-container>
     

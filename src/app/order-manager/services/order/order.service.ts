@@ -12,6 +12,7 @@ import { PauseOrderReq } from '../../models/pause-order-req';
 import { BelPostReq } from '../../models/bel-post-req';
 import { BelPostAnsw } from '../../models/bel-post-answ';
 import { Status } from 'src/app/common/models/status';
+import { Changer } from '../../models/changer';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class OrderService {
   urlReturnToAssembly = this.urlOrder + '/backorder/';
   urlDlete = this.urlOrder + '/delete/';
   urlToBitrix = this.urlOrder + '/oms/';
+  urlSaveChange = this.urlOrder + '/change/';
 
   constructor(private http: HttpClient) { }
 
@@ -82,5 +84,9 @@ export class OrderService {
 
   orderSendToBitrix(data: FindOrderReq): Observable<Status> {
     return this.http.post<Status>(`${this.urlToBitrix}`, data);
+  }
+
+  orderSaveChange(data: Changer): Observable<Status> {
+    return this.http.post<Status>(`${this.urlSaveChange}`, data);
   }
 }

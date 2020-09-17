@@ -5,6 +5,9 @@ import { SnackbarService } from 'src/app/common/services/snackbar/snackbar.servi
 import { Title } from '@angular/platform-browser';
 import { OrderListAnsw } from '../models/order-list-answ';
 import { timer } from 'rxjs';
+import { FindOrderReq } from '../models/find-order-req';
+import { TokenService } from 'src/app/common/services/token/token.service';
+import { OrderService } from '../services/order/order.service';
 
 @Component({
   selector: 'app-orders-form',
@@ -21,9 +24,15 @@ export class OrdersFormComponent implements OnInit {
   checkedOrders = false;
   pause = false;
 
+  messageNoConnect = 'Нет соединения, попробуйте позже.';
+  action = 'Ok';
+  styleNoConnect = 'red-snackbar';
+
   constructor(
     private titleService: Title,
+    private tokenService: TokenService,
     private timerService: TimerService,
+    private orderService: OrderService,
     private snackbarService: SnackbarService,
     private orderSearchService: OrderSearchService,
   ) { }
@@ -34,7 +43,7 @@ export class OrdersFormComponent implements OnInit {
       this.timerValue = this.timerValue - 1;
       if(this.timerValue == 0) {
         this.snackbarService.openSnackBar('Список заказов был обнавлен', 'Ok');
-        this.timerService.updateEvent('update');
+        this.timerService.updateEvent(this.tabIndex);
         this.timerValue = 120;
       }
     }, 1000);
@@ -46,6 +55,7 @@ export class OrdersFormComponent implements OnInit {
 
   selectedTab($event) {
     this.tabIndex = $event.index;
+    this.orderSearchService.searchEvent({ order: this.searchNumOrder, shop: this.tabIndex });
     this.timerValue = 120;
   }
 
@@ -56,13 +66,13 @@ export class OrdersFormComponent implements OnInit {
 
   onClearNumOrder() {
     this.searchNumOrder = '';
-    this.orderSearchService.searchEvent(this.searchNumOrder);
+    this.orderSearchService.searchEvent({ order: this.searchNumOrder, shop: this.tabIndex });
   }
 
   onSearchOrder() {
     this.timerValue = 120;
     if(!this.pause) {
-      this.orderSearchService.searchEvent(this.searchNumOrder);
+      this.orderSearchService.searchEvent({ order: this.searchNumOrder, shop: this.tabIndex });
       this.pause = true;
       let t = timer(0, 1000).subscribe(vl => { 
         console.log(vl);
@@ -74,11 +84,27 @@ export class OrdersFormComponent implements OnInit {
     }
   }
 
+  // searchOrder(searchValue: string) {
+  //   if(searchValue) {
+  //     let findOrderReq = new FindOrderReq(this.tokenService.getToken(), searchValue, this.data);
+  //     this.orderService.orderSearch(findOrderReq).subscribe(response => {
+  //       if(response) {
+  //         let orders = response;
+
+  //       }
+  //     },
+  //     error => { 
+  //       console.log(error);
+  //       this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
+  //     });
+  //   } 
+  // }
+
   onChanged(listOrders: Array<OrderListAnsw>) {
     if(listOrders.length > 0) 
       this.checkedOrders = true;
     else 
-    this.checkedOrders = false;
+      this.checkedOrders = false;
   }
 
   onListOrdersPauseOrGo() {
