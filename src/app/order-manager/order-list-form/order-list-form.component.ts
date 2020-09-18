@@ -354,4 +354,8 @@ export class OrderListFormComponent implements OnInit {
       this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
     });
   }
+
+  ngOnDestroy() {
+    this.data = '';
+  }
 }

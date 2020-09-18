@@ -55,7 +55,8 @@ export class OrdersFormComponent implements OnInit {
 
   selectedTab($event) {
     this.tabIndex = $event.index;
-    this.orderSearchService.searchEvent({ order: this.searchNumOrder, shop: this.tabIndex });
+    if(this.searchNumOrder)
+      this.orderSearchService.searchEvent({ order: this.searchNumOrder, shop: this.tabIndex });
     this.timerValue = 120;
   }
 
