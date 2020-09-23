@@ -111,7 +111,8 @@ thumbClass="custom-scrollbars">
                             (click)="onClickReturnProduct(element)" 
                             *ngIf="(element.status === 'ОТЛОЖЕН' 
                             || element.status === 'Отмена' 
-                            || element.status === 'Отправлен')
+                            || element.status === 'Отправлен'
+                            || element.status === 'завершен')
                             && isAdminIshop">
                             <mat-icon style="color: rgb(21, 197, 188);">move_to_inbox</mat-icon>
                             <span style="color: rgb(21, 197, 188);">Возврат продукции</span>
