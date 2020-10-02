@@ -109,7 +109,7 @@
                 </mat-form-field> -->
 
                 <mat-form-field appearance="outline">
-                    <input type="number" autocomplete="off" matInput placeholder="Количество" [(ngModel)]="element.count_g" (input)="onInputNewCount($event.target.value, element)" (focusout)="onFocusout(element)" min="0" max="element.count_e">
+                    <input type="number" autocomplete="off" matInput placeholder="Количество" [(ngModel)]="element.count_g" (input)="onInputNewCount($event.target.value, element)" (focusout)="onFocusout(element)" min="0" max="element.count_e" step="0.01">
                     <!-- <mat-icon id="close" matSuffix *ngIf="element.count_g.length > 0" (click)="onClearCount(element);">close</mat-icon> -->
                 </mat-form-field>
 
