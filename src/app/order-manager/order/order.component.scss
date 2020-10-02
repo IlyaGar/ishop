@@ -35,3 +35,45 @@ button#save {
 #store {
     color: rgb(194, 216, 245);
 }
+.belpost {
+    color: rgb(74, 128, 228);
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+img {
+    margin: 0;
+}
+.list-img-box {
+    margin: 0.25rem;
+}
+.img-box {
+    margin: 0.25rem;
+    padding: 0.2rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+}
+// .img-box:hover {
+//     border: 2px solid rgba(146, 146, 146, 0.75);
+//     border-radius: 10px;
+// }
+.container {
+    position: relative; 
+}
+.container:hover {
+    cursor: pointer;
+}
+.container img { 
+    display: block; 
+}
+.container .icon-close { 
+    position: absolute; 
+    top: -13px; 
+    right: -13px; 
+}
+button#bt-delete {
+    color: rgba(146, 146, 146, 0.75);
+}
+button#bt-delete:hover {
+    color: rgba(176, 89, 202, 0.75);;
+}

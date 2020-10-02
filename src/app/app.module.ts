@@ -35,6 +35,7 @@ import { EmptyFormComponent } from './common/components/empty-form/empty-form.co
 import { OrdersInAssemblyComponent } from './order-manager/orders-in-assembly/orders-in-assembly.component';
 import { ConfirmReturnProductComponent } from './order-manager/dialog-windows/confirm-return-product/confirm-return-product.component';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
+import { PrintBelpostBarcodeComponent } from './order-manager/dialog-windows/print-belpost-barcode/print-belpost-barcode.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
     EmptyFormComponent,
     OrdersInAssemblyComponent,
     ConfirmReturnProductComponent,
+    PrintBelpostBarcodeComponent,
   ],
   imports: [
     AppRoutingModule,

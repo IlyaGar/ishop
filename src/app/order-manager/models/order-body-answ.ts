@@ -6,6 +6,8 @@ export class OrderBodyAnsw{
         public num: string,
         public sub_num: string,
         public name: string,
+        public belPost: boolean,
+        public postCode: string,
         public aboutClient: ClientInfo,
         public body: Array<OrderBody>,
     ){}

@@ -13,7 +13,7 @@ import { EmptyFormComponent } from './common/components/empty-form/empty-form.co
 const routes: Routes = [
   { path: '', redirectTo: '/orders/ready-build', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
-  { path: 'order/:id', component: OrderComponent, data: { status : 'status' } },
+  { path: 'order/:id', component: OrderComponent, data: { id: '1', barcodes: '' } },
   { path: 'orders/ready-build', component: OrdersReadyBuildComponent },
   // { path: 'orders/in-assembly', component: OrdersReadyBuildComponent },
   { path: 'orders/uncompleted', component: OrdersUncompletedComponent },

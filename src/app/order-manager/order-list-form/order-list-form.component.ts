@@ -289,17 +289,6 @@ export class OrderListFormComponent implements OnInit {
     });
   }
 
-  onSendInOMS(id) {
-    let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), id);
-    this.orderService.orderSendInOMS(pauseOrderReq).subscribe(response => {
-
-    },
-    error => { 
-      console.log(error);
-      this.snackbarService.openSnackBar(this.messageNoConnect, this.action, this.styleNoConnect);
-    });
-  }
-
   onClickReturnToAssembly(id) {
     let pauseOrderReq = new PauseOrderReq(this.tokenService.getToken(), id);
     this.orderService.orderReturnToAssembly(pauseOrderReq).subscribe(response => {

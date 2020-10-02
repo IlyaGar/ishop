@@ -127,11 +127,6 @@ thumbClass="custom-scrollbars">
                             <span style="color: blue;">Вернуть в сборку</span>
                         </button>
 
-                        <!-- <button mat-menu-item (click)="onSendInOMS(element.order.sub_num)">
-                            <mat-icon>arrow_right_alt</mat-icon>
-                            <span>OMS</span>
-                        </button> -->
-
                         <button mat-menu-item (click)="onClickSendToBitrix(element)" 
                         *ngIf="(element.status === 'в паузе' || element.status === 'завершен') && isAdminIshop"
                         [disabled]="element.order.isSendToBitrix">

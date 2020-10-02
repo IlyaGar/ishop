@@ -13,6 +13,7 @@ import { BelPostReq } from '../../models/bel-post-req';
 import { BelPostAnsw } from '../../models/bel-post-answ';
 import { Status } from 'src/app/common/models/status';
 import { Changer } from '../../models/changer';
+import { DelPostRequest } from '../../models/del-post-request';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,7 @@ export class OrderService {
   urlDlete = this.urlOrder + '/delete/';
   urlToBitrix = this.urlOrder + '/oms/';
   urlSaveChange = this.urlOrder + '/change/';
+  urlDelpost = this.urlOrder + '/delpost/';
 
   constructor(private http: HttpClient) { }
 
@@ -78,15 +80,15 @@ export class OrderService {
     return this.http.post<Status>(`${this.urlDlete}`, data);
   }
 
-  orderSendInOMS(data: PauseOrderReq): Observable<Status> {
-    return this.http.post<Status>(`${'this.urlSendInOMS'}`, data);
-  }
-
   orderSendToBitrix(data: FindOrderReq): Observable<Status> {
     return this.http.post<Status>(`${this.urlToBitrix}`, data);
   }
 
   orderSaveChange(data: Changer): Observable<Status> {
     return this.http.post<Status>(`${this.urlSaveChange}`, data);
+  }
+
+  orderDeleteBelpostBarcode(data: DelPostRequest): Observable<Status> {
+    return this.http.post<Status>(`${this.urlDelpost}`, data);
   }
 }
