@@ -188,6 +188,9 @@ export class OrderComponent implements OnInit {
       if(response.status === '200 OK') {
         this.snackbarService.openSnackBar('Количество изменено', this.action);
       }
+      if(response.status === 'fail') {
+        this.snackbarService.openSnackBar('Перезагрузите страницу', this.action);
+      }
     },
     error => { 
       console.log(error);

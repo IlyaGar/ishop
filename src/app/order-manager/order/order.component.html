@@ -193,6 +193,19 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumnsPrint; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsPrint; let i = index"></tr>
     </table>
+
+    <div style="
+        font-size: 185px;
+        position:fixed;
+        bottom:10px;
+        opacity:0.5;
+        z-index:99;
+        /* color:white; */
+        margin-left: calc(50% - 180px);">
+        {{orderBodyAnsw.num}}
+    </div>
+    
+    
 </div>
 
 <div id="print-barcode-section" hidden *ngIf="belPostAnsw">
