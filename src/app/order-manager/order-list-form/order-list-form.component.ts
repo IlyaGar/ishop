@@ -127,8 +127,8 @@ export class OrderListFormComponent implements OnInit {
   }
 
   onScroll($event) {
-    let scrollPercent = $event.currentTarget.scrollTop * 100 / this.scrollHeight;
-    if(scrollPercent > 90) {
+    let tempScrollPercent = $event.currentTarget.scrollTop * 100 / this.scrollHeight;
+    if(tempScrollPercent > 85) {
       this.dynamicLoadScroll();
       this.scrollHeight = this.scrollHeight + 1600;
     }
