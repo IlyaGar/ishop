@@ -176,7 +176,7 @@ export class OrderComponent implements OnInit {
     // });
 
     this.dataSource.map(element => {
-      if(element.count_g > element.count_e)
+      if(Number(element.count_g) > Number(element.count_e))
         element.count_g = element.count_e;
       delete element.count_gСhange;
       delete element.changed;
@@ -185,7 +185,7 @@ export class OrderComponent implements OnInit {
     let order = new Changer(this.tokenService.getToken(), this.orderBodyAnsw);
 
     this.orderService.orderSaveChange(order).subscribe(response => {
-      if(response.status === '200 OK') {
+      if(response.status === 'Complate') {
         this.snackbarService.openSnackBar('Количество изменено', this.action);
       }
       if(response.status === 'fail') {
