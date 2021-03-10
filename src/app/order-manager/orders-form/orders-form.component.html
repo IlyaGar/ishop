@@ -38,4 +38,7 @@
     <mat-tab label="Диамант"> 
         <app-order-list-form *ngIf="tabIndex === 6" [data]="'31'" (onChanged)="onChanged($event)"></app-order-list-form>
     </mat-tab>
+    <mat-tab label="Гродно"> 
+        <app-order-list-form *ngIf="tabIndex === 7" [data]="'33'" (onChanged)="onChanged($event)"></app-order-list-form>
+    </mat-tab>
 </mat-tab-group>

@@ -38,7 +38,8 @@ export class OrderListFormComponent implements OnInit {
     { index: 3, id: '22' }, 
     { index: 4, id: '25' },
     { index: 5, id: '21' },
-    { index: 6, id: '31' } 
+    { index: 6, id: '31' },
+    { index: 7, id: '33' } 
   ];
   listStatus: Array<any> = [ 
     { path: '/orders/ready-build', status: 'gs' }, 
